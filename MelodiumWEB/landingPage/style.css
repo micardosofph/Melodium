@@ -1,11 +1,15 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
 :root {
-    --bg-color: #E4DDCF;
-    --accent-bg-color: #ffffff;
-    --text-color: #1a1a1a;
+  --bg-color: #E4DDCF;
+  --accent-bg-color: #ffffff;
+  --text-color: #1a1a1a;
 }
 
 /* 1. Use a more-intuitive box-sizing model */
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
@@ -29,18 +33,31 @@ body {
 }
 
 /* 6. Improve media defaults */
-img, picture, video, canvas, svg {
+img,
+picture,
+video,
+canvas,
+svg {
   display: block;
   max-width: 100%;
 }
 
 /* 7. Inherit fonts for form controls */
-input, button, textarea, select {
+input,
+button,
+textarea,
+select {
   font: inherit;
 }
 
 /* 8. Avoid text overflows */
-p, h1, h2, h3, h4, h5, h6 {
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   overflow-wrap: break-word;
 }
 
@@ -48,34 +65,45 @@ p, h1, h2, h3, h4, h5, h6 {
 p {
   text-wrap: pretty;
 }
-h1, h2, h3, h4, h5, h6 {
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   text-wrap: balance;
 }
 
 /*
   10. Create a root stacking context
 */
-#root, #__next {
+#root,
+#__next {
   isolation: isolate;
 }
 
-
-body{
-	background-color: var(--bg-color);
-	padding: 2rem;
-	height: 100vh;
+hr {
+  width: 50px;
+  height: 2px;
+  background-color: black;
 }
 
-.main{
-	background-color: var(--accent-bg-color);
-	width: 100%;
-	height: 100vh;
+body {
+  background-color: var(--bg-color);
+  padding: 2rem;
+  height: 100vh;
+}
+
+.main {
+  background-color: var(--accent-bg-color);
+  width: 100%;
+  height: 100vh;
 
   padding: 1rem;
 }
 
-.navigator{
-  background-color: var(--accent-bg-color);
+.navigator {
   width: 100%;
   height: 3rem;
   display: flex;
@@ -84,12 +112,12 @@ body{
 
   background-color: var(--bg-color);
   border-radius: 2rem;
-  stroke-width: 2px;
-  stroke-color: black;
+
+  border: 1px solid black;
 
 }
 
-.navigator ul{
+.navigator ul {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -97,4 +125,17 @@ body{
   list-style-type: none;
 
   justify-content: space-around;
+}
+
+a,
+a:visited {
+  color: black;
+  text-decoration: none;
+}
+
+* {
+  font-family: "Inter", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
 }
