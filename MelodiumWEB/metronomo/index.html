@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="metronome">
+        <span id="beat-counter">--</span>
+
+        <div class="metronomeClicksContainer" id="beats-container">
+        </div>
+
+        <div class="controlBpmAndPlayerContainer">
+            <div class="flex">
+                <button id="decreaseTempo">-</button>
+                <input type="range" id="bpm-slider" min="40" max="260" value="100">
+                <button id="increaseTempo">+</button>
+            </div>
+            <span><span id="bpm-display">100</span> BPM</span>
+            <button id="start-stop">Start</button>
+        </div>
+
+
+        <div class="metronomeControls" id="metronome-controls">
+            <button id="metronome-controls-button-minus">-</button>
+            <span id="metronome-controls-beat-count">4</span>
+            <button id="metronome-controls-button-plus">+</button>
+        </div>
+
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
