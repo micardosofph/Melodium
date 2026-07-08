@@ -1,40 +1,69 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Melodium - Metrônomo de Precisão</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-    <div id="metronome">
-        <span id="beat-counter">--</span>
+
+    <header class="navbar border-main" aria-label="Navegação Principal">
+        <div class="logo-area">
+            <span class="logo-box">Ml</span>
+            <span>Melodium</span>
+        </div>
+        <nav>
+            <ul class="nav-links">
+                <li><a href="#">Sobre o App</a></li>
+                <li><a href="#">Rotinas Guiadas</a></li>
+                <li><a href="#">Aba Social</a></li>
+                <li><a href="#">Ferramentas</a></li>
+                <li><a href="#">Acessibilidade</a></li>
+                <li><a href="#">Painel Web</a></li>
+            </ul>
+        </nav>
+        <div class="nav-actions">
+            <a href="#" class="btn-login">Entrar</a>
+            <a href="#" class="btn-signup border-main">Cadastre-se</a>
+        </div>
+    </header>
+
+    <main id="metronome" class="border-main">
+        <div class="metronome-header">
+            <span class="panel-tag">Módulo de Ritmo</span>
+            <span id="beat-counter">--</span>
+        </div>
 
         <div class="metronomeClicksContainer" id="beats-container">
-        </div>
+            </div>
 
         <div class="controlBpmAndPlayerContainer">
-            <div class="flex">
-                <button id="decreaseTempo">-</button>
+            <div class="flex-row">
+                <button id="decreaseTempo" class="border-main" aria-label="Diminuir Tempo">-</button>
                 <input type="range" id="bpm-slider" min="40" max="260" value="100">
-                <button id="increaseTempo">+</button>
+                <button id="increaseTempo" class="border-main" aria-label="Aumentar Tempo">+</button>
             </div>
-            <span><span id="bpm-display">100</span> BPM</span>
-            <button id="start-stop">Start</button>
+            
+            <div class="bpm-text-display">
+                <span id="bpm-display">100</span> <span class="bpm-sub">BPM</span>
+            </div>
+            
+            <button id="start-stop" class="border-main">Start</button>
         </div>
-
 
         <div class="metronomeControls" id="metronome-controls">
-            <button id="metronome-controls-button-minus">-</button>
-            <span id="metronome-controls-beat-count">4</span>
-            <button id="metronome-controls-button-plus">+</button>
+            <button id="metronome-controls-button-minus" class="border-main">-</button>
+            <div class="beat-count-wrapper">
+                <span id="metronome-controls-beat-count">4</span>
+                <span class="beat-count-label">Tempos</span>
+            </div>
+            <button id="metronome-controls-button-plus" class="border-main">+</button>
         </div>
-
-    </div>
+    </main>
 
     <script src="script.js"></script>
 </body>
-
 </html>

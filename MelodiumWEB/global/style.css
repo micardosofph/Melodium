@@ -1,0 +1,185 @@
+:root {
+  /* Paleta base (compatível com seus CSSs existentes) */
+  --bg-page: #f6fdf5;
+  --bg-card-green: #C2E0BC;
+  --bg-card-white: #ffffff;
+  --accent-brown: #612B06;
+  --text-color: #612B06;
+  --border-color: #612B06;
+
+  --border-width: 1.5px;
+
+  --radius-lg: 1.8rem;
+  --radius-md: 1rem;
+  --radius-pill: 50rem;
+
+  /* Aliases mantidos por compatibilidade */
+  --hover-color: #C2E0BC;
+  --beat-color: #C2E0BC;
+  --beat-forte-color: #612B06;
+
+  --z-index-navbar: 2;
+  --z-index-header-safe-area: 1;
+}
+
+/* --- Reset --- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+a:-webkit-any-link {
+  cursor: pointer;
+  text-decoration: none;
+  color: var(--text-color);
+}
+
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+    Ubuntu, Cantarell, sans-serif;
+  background-color: var(--bg-page);
+  color: var(--text-color);
+  min-height: 100vh;
+  line-height: 1.4;
+
+  /* Mantém espaçamento “geral” sem atrapalhar layouts específicos */
+  padding: 2vw;
+  overflow-x: hidden;
+
+  -webkit-font-smoothing: antialiased;
+}
+
+.border-main {
+  border: var(--border-width) solid var(--border-color);
+}
+
+.icon-diamond {
+  width: 1em;
+  height: 1em;
+  color: var(--accent-brown);
+  flex-shrink: 0;
+}
+
+/* --- Navbar / Header (base reutilizável) --- */
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 0.8rem 1.5rem;
+  border-radius: var(--radius-pill);
+
+  background-color: var(--bg-card-white);
+  gap: 1rem;
+}
+
+/* Variante “landing (fixa no topo)” */
+.navbar.fixed-top {
+  width: calc(100% - 4vw);
+  position: fixed;
+  top: 2vw;
+  height: 4.75rem;
+  z-index: var(--z-index-navbar);
+}
+
+.headerSafeArea {
+  position: fixed;
+  width: 100%;
+  height: calc(4.75rem + 4vw);
+  z-index: var(--z-index-header-safe-area);
+  top: 0;
+  left: 0;
+
+  background-image: linear-gradient(to bottom, var(--bg-page), transparent);
+}
+
+.logo-area {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 700;
+  font-size: 1.25rem;
+}
+
+.logo-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 0.4rem;
+  color: var(--bg-card-green);
+}
+
+/* versão com imagem (landing) */
+.logo-box img {
+  height: 3rem;
+  width: 3rem;
+}
+
+/* versão sem imagem (metronomo) */
+.logo-box:not(:has(img)) {
+  background-color: var(--accent-brown);
+  padding: 0.2rem 0.5rem;
+  font-size: 0.9rem;
+  font-family: monospace;
+  font-weight: bold;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 1.5vw;
+  list-style: none;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: var(--text-color);
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.btn-login {
+  text-decoration: none;
+  color: var(--text-color);
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+.btn-signup {
+  text-decoration: none;
+  color: var(--accent-brown);
+  background-color: var(--bg-card-green);
+  padding: 0.6rem 1.5rem;
+  border-radius: var(--radius-pill);
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: transform 0.2s;
+}
+
+.btn-signup:hover {
+  transform: scale(1.03);
+}
+
+/* --- Responsivo comum --- */
+@media (max-width: 768px) {
+  body {
+    padding: 4vw;
+  }
+
+  .navbar.fixed-top {
+    height: 5rem;
+    width: calc(100% - 4vw);
+    transition: height 0.4s cubic-bezier(0.4, 0, 0.2, 1), border-radius 0.3s ease;
+  }
+}
+

@@ -20,6 +20,12 @@ const beatCount = document.getElementById('metronome-controls-beat-count');
 let MIN_BEATS = 2;
 let MAX_BEATS = 12;
 
+let volumeMetronome = 1; //valor padrão, de 0 a 1
+
+function changeVolume(newVolume) {
+    volumeMetronome = parseFloat(newVolume);
+}
+
 bpmSlider.oninput = () => {
     bpm = bpmSlider.value;
     bpmDisplay.innerText = bpm;
@@ -134,9 +140,13 @@ function playClick(beatNumber, executionTime) {
         osc.frequency.value = 800;
     }
 
-    envelope.gain.value = 1;
-    envelope.gain.exponentialRampToValueAtTime(1, executionTime + 0.001);
+    envelope.gain.setValueAtTime(0.001, executionTime);
+
+    envelope.gain.exponentialRampToValueAtTime(volumeMetronome, executionTime + 0.001);
     envelope.gain.exponentialRampToValueAtTime(0.001, executionTime + 0.05);
+
+    osc.connect(envelope);
+    envelope.connect(audioContext.destination);
 
     osc.connect(envelope);
     envelope.connect(audioContext.destination);
