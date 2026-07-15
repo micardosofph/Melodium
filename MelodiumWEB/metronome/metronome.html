@@ -6,30 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Melodium - Metrônomo de Precisão</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../global/style.css">
 </head>
 
 <body>
-
-    <header class="navbar border-main" aria-label="Navegação Principal">
-        <div class="logo-area">
-            <span class="logo-box">Ml</span>
-            <span>Melodium</span>
-        </div>
-        <nav>
-            <ul class="nav-links">
-                <li><a href="#">Sobre o App</a></li>
-                <li><a href="#">Rotinas Guiadas</a></li>
-                <li><a href="#">Aba Social</a></li>
-                <li><a href="#">Ferramentas</a></li>
-                <li><a href="#">Acessibilidade</a></li>
-                <li><a href="#">Painel Web</a></li>
-            </ul>
-        </nav>
-        <div class="nav-actions">
-            <a href="#" class="btn-login">Entrar</a>
-            <a href="#" class="btn-signup border-main">Cadastre-se</a>
-        </div>
-    </header>
+    <!-- Header global (injetado via landingHeader.js) -->
+    <div id="header-placeholder"></div>
+    <div class="headerOverlay"></div>
+    <div class="headerSafeArea"></div>
 
     <main id="metronome" class="border-main">
         <div class="metronome-header">
@@ -38,7 +22,7 @@
         </div>
 
         <div class="metronomeClicksContainer" id="beats-container">
-            </div>
+        </div>
 
         <div class="controlBpmAndPlayerContainer">
             <div class="flex-row">
@@ -46,11 +30,11 @@
                 <input type="range" id="bpm-slider" min="40" max="260" value="100">
                 <button id="increaseTempo" class="border-main" aria-label="Aumentar Tempo">+</button>
             </div>
-            
+
             <div class="bpm-text-display">
                 <span id="bpm-display">100</span> <span class="bpm-sub">BPM</span>
             </div>
-            
+
             <button id="start-stop" class="border-main">Start</button>
         </div>
 
@@ -64,6 +48,8 @@
         </div>
     </main>
 
+    <script src="../global/landingHeader.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
+

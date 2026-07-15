@@ -1,0 +1,226 @@
+/* UI simples do Afinador */
+:root {
+  --afinador-bg: #ffffff;
+}
+
+/* --- Estilos do Card do Afinador --- */
+.afinador-wrapper {
+  padding-top: calc(5rem + 4vw);
+  display: flex;
+  justify-content: center;
+}
+
+.afinador-card {
+  width: 100%;
+  max-width: 680px;
+  background: var(--bg-card-white);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  margin: 0 4vw 4vw;
+  text-align: center;
+}
+
+.afinador-title {
+  font-size: clamp(1.8rem, 3.2vw, 2.4rem);
+  font-weight: 800;
+  margin-bottom: 0.5rem;
+}
+
+.afinador-subtitle {
+  color: var(--accent-brown);
+  opacity: 0.9;
+  margin-bottom: 1.5rem;
+}
+
+/* Painel de Exibição das Notas */
+.afinador-display {
+  padding: 1.5rem;
+  border-radius: var(--radius-md);
+  margin-bottom: 1.5rem;
+  background: var(--bg-page);
+}
+
+.afinador-note {
+  font-size: 4rem;
+  font-weight: 900;
+  line-height: 1;
+  color: var(--accent-brown);
+}
+
+.afinador-freq {
+  margin-top: 0.5rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  opacity: 0.85;
+}
+
+/* Painel de Ponteiro (Medidor) */
+.afinador-meter {
+  position: relative;
+  height: 80px;
+  border-radius: var(--radius-md);
+  background: var(--bg-page);
+  border: var(--border-width) solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  margin-bottom: 2rem;
+}
+
+.meter-line {
+  width: 80%;
+  height: 6px;
+  background: linear-gradient(90deg, #d9534f 15%, var(--accent-brown) 50%, #5cb85c 85%);
+  border-radius: 50px;
+  border: 1px solid var(--border-color);
+}
+
+.meter-pointer {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 18px;
+  height: 18px;
+  background: var(--accent-brown);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  border: 2px solid var(--bg-card-white);
+  box-shadow: 0 0 10px rgba(97, 43, 6, 0.3);
+  /* Transição suave do movimento do LERP */
+  transition: transform 0.05s linear; 
+}
+
+/* ==========================================================================
+   NOVO: Botão Único de Microfone Redondo (Idêntico ao do mockup)
+   ========================================================================== */
+.tuner-action-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 2rem;
+}
+
+.mic-toggle-btn {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+  background-color: var(--bg-card-green); /* Verde sálvia padrão (Desligado) */
+  color: var(--accent-brown);
+  border: var(--border-width) solid var(--border-color);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.mic-toggle-btn:hover {
+  transform: scale(1.05);
+}
+
+/* Estado de Gravação / Ouvindo (Fica Vermelho) */
+.mic-toggle-btn.recording {
+  background-color: #d9534f; /* Vermelho Gravação */
+  color: #ffffff;
+  box-shadow: 0 0 15px rgba(217, 83, 79, 0.6);
+  animation: pulse-recording 1.5s infinite alternate;
+}
+
+.mic-icon {
+  width: 1.8rem;
+  height: 1.8rem;
+}
+
+.tuner-status-text {
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  opacity: 0.8;
+}
+
+@keyframes pulse-recording {
+  0% { transform: scale(1); box-shadow: 0 0 10px rgba(217, 83, 79, 0.5); }
+  100% { transform: scale(1.06); box-shadow: 0 0 20px rgba(217, 83, 79, 0.8); }
+}
+
+/* ==========================================================================
+   NOVO: Guia de Cordas em Linha Única Horizontal
+   ========================================================================== */
+.guitar-guide {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: var(--border-width) dashed var(--border-color);
+  width: 100%;
+}
+
+.strings-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.string-btn {
+  flex: 1;
+  background-color: var(--bg-card-white);
+  color: var(--accent-brown);
+  padding: 0.8rem 0.4rem;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.2rem;
+  min-width: 0; /* Previne quebras raras de texto */
+  transition: transform 0.15s ease, background-color 0.2s, color 0.2s;
+}
+
+.string-btn:hover {
+  transform: translateY(-3px);
+  background-color: var(--accent-brown);
+  color: var(--bg-card-green);
+}
+
+.string-note {
+  font-size: 1.3rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.string-num {
+  font-size: 0.75rem;
+  font-weight: 700;
+  opacity: 0.8;
+}
+
+.afinador-hint {
+  margin-top: 1.5rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  opacity: 0.8;
+}
+
+@media (max-width: 480px) {
+  .strings-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+  }
+}
+
+
+
+/* --- Responsivo comum --- */
+@media (max-width: 768px) {
+  
+  .afinador-card{
+    margin: 0;
+  }
+
+
+}

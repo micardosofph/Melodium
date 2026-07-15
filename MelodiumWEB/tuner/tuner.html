@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Melodium - Afinador de Violão</title>
+
+  <link rel="stylesheet" href="../global/style.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div id="header-placeholder"></div>
+  <div class="headerOverlay"></div>
+  <div class="headerSafeArea"></div>
+
+  <main class="afinador-wrapper">
+    <section class="afinador-card border-main" aria-label="Afinador Digital">
+      <h1 class="afinador-title">Afinador de Violão</h1>
+      <p class="afinador-subtitle">Afinação padrão (EADGBE)</p>
+
+      <div class="afinador-display border-main">
+        <div class="afinador-note">--</div>
+        <div class="afinador-freq">Frequência: -- Hz</div>
+      </div>
+
+      <div class="afinador-meter" aria-label="Medidor de afinação">
+        <div class="meter-line"></div>
+        <div id="meter-pointer" class="meter-pointer"></div>
+      </div>
+
+      <div class="tuner-action-container">
+        <button id="tuner-toggle" class="mic-toggle-btn" aria-label="Ativar microfone">
+          <svg class="mic-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
+            <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
+          </svg>
+        </button>
+        <span class="tuner-status-text">Microfone Desligado</span>
+      </div>
+
+      <div class="guitar-guide">
+        <div class="strings-container">
+          <button class="string-btn border-main" onclick="playReferenceTone(82.41, 'E2')">
+            <span class="string-note">E2</span>
+            <span class="string-num">6ª</span>
+          </button>
+          <button class="string-btn border-main" onclick="playReferenceTone(110.00, 'A2')">
+            <span class="string-note">A2</span>
+            <span class="string-num">5ª</span>
+          </button>
+          <button class="string-btn border-main" onclick="playReferenceTone(146.83, 'D3')">
+            <span class="string-note">D3</span>
+            <span class="string-num">4ª</span>
+          </button>
+          <button class="string-btn border-main" onclick="playReferenceTone(196.00, 'G3')">
+            <span class="string-note">G3</span>
+            <span class="string-num">3ª</span>
+          </button>
+          <button class="string-btn border-main" onclick="playReferenceTone(246.94, 'B3')">
+            <span class="string-note">B3</span>
+            <span class="string-num">2ª</span>
+          </button>
+          <button class="string-btn border-main" onclick="playReferenceTone(329.63, 'E4')">
+            <span class="string-note">E4</span>
+            <span class="string-num">1ª</span>
+          </button>
+        </div>
+      </div>
+
+      <p class="afinador-hint">Clique no microfone e toque uma corda do seu violão.</p>
+    </section>
+  </main>
+
+  <script src="../global/landingHeader.js"></script>
+  <script src="tuner.js"></script>
+</body>
+
+</html>
