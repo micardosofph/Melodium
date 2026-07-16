@@ -1,18 +1,3 @@
-document.addEventListener("DOMContentLoaded", () => {
-    const placeholder = document.getElementById("header-placeholder");
-    if (!placeholder) return;
-
-    fetch("header.html", { cache: "no-store" })
-        .then((response) => {
-            if (!response.ok) throw new Error("Erro ao carregar header.html");
-            return response.text();
-        })
-        .then((html) => {
-            placeholder.innerHTML = html;
-        })
-        .catch((err) => console.error(err));
-});
-
 function menuButton() {
     const headerOverlay = document.querySelector(".headerOverlay");
     const openMenuImage = document.querySelector(".openMenuImage");

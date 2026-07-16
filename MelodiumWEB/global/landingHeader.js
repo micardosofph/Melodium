@@ -52,31 +52,31 @@
   };
 
   // Carrega dinamicamente o arquivo header.html
-  function injectHeaderComponent() {
+  async function injectHeaderComponent() {
     const targetPlaceholderEl = document.getElementById(PLACEHOLDER_ID);
     if (!targetPlaceholderEl) return;
 
-    // Encontra o caminho relativo correto do header.html baseado no diretório atual
-    const headerRequestUrl = new URL('../global/header.html', window.location.href).toString();
+    const headerRequestUrls = [
+      new URL('../global/header.html', window.location.href).toString(),
+      '../global/header.html'
+    ];
 
-    // Se o header.html for pequeno e o fetch falhar (ex: file://), tenta fallback via XHR/caminho direto
-    fetch(headerRequestUrl, { cache: 'no-store' })
+    for (const headerRequestUrl of headerRequestUrls) {
+      try {
+        const response = await fetch(headerRequestUrl, { cache: 'no-store' });
+        if (!response.ok) continue;
 
-      .then((response) => {
-        if (!response.ok) throw new Error('Falha ao baixar o arquivo header.html');
-        return response.text();
-      })
-      .then((htmlTemplate) => {
-        // Renderiza o HTML no placeholder
+        const htmlTemplate = await response.text();
         targetPlaceholderEl.innerHTML = htmlTemplate;
-
-        // Configura o fechamento pelo clique no overlay
         attachOverlayCloseEvent();
         console.log('[HeaderComponent] Cabeçalho carregado com sucesso!');
-      })
-      .catch((error) => {
-        console.error('[HeaderComponent] Erro de injeção:', error);
-      });
+        return;
+      } catch (error) {
+        console.warn('[HeaderComponent] Tentativa falhou:', headerRequestUrl, error);
+      }
+    }
+
+    console.error('[HeaderComponent] Erro de injeção: não foi possível carregar header.html');
   }
 
   // Dispara a montagem do componente assim que o DOM estiver pronto
