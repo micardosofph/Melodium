@@ -68,19 +68,14 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-
   padding: 0.8rem 1.5rem;
   border-radius: var(--radius-pill);
-
   background-color: var(--bg-card-white);
   gap: 1rem;
-}
-
-/* Variante “landing (fixa no topo)” */
-.navbar.fixed-top {
   width: calc(100% - 4vw);
   position: fixed;
   top: 2vw;
+  left: 2vw;
   height: 4.75rem;
   z-index: var(--z-index-navbar);
 }
@@ -108,24 +103,13 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-
   border-radius: 0.4rem;
   color: var(--bg-card-green);
 }
 
-/* versão com imagem (landing) */
 .logo-box img {
   height: 3rem;
   width: 3rem;
-}
-
-/* versão sem imagem (metronomo) */
-.logo-box:not(:has(img)) {
-  background-color: var(--accent-brown);
-  padding: 0.2rem 0.5rem;
-  font-size: 0.9rem;
-  font-family: monospace;
-  font-weight: bold;
 }
 
 .nav-links {
@@ -145,6 +129,7 @@ body {
 .nav-actions {
   display: flex;
   align-items: center;
+  justify-content: space-evenly;
   gap: 1rem;
 }
 
@@ -168,6 +153,57 @@ body {
 
 .btn-signup:hover {
   transform: scale(1.03);
+}
+
+.menuButton {
+  display: none;
+  width: 2rem;
+  height: 2rem;
+  position: absolute;
+  right: 1.5rem;
+  top: 1.5rem;
+  background: none;
+  color: inherit;
+  border: none;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+  outline: inherit;
+}
+
+.menuButton img {
+  width: 2rem;
+  height: 2rem;
+  display: block;
+}
+
+.openMenuImage,
+.closeMenuImage {
+  width: 2rem;
+  height: 2rem;
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  transform: scale(0.8);
+}
+
+.openMenuImage.active,
+.closeMenuImage.active {
+  display: block;
+  opacity: 1;
+  visibility: visible;
+  transform: scale(1);
+}
+
+.logo-box:not(:has(img)) {
+  background-color: var(--accent-brown);
+  padding: 0.2rem 0.5rem;
+  font-size: 0.9rem;
+  font-family: monospace;
+  font-weight: bold;
 }
 
 .headerOverlay {
@@ -201,10 +237,78 @@ body {
     padding: 4vw;
   }
 
-  .navbar.fixed-top {
+  .menuButton {
+    display: flex !important;
+    width: 2rem;
+    height: 2rem;
+  }
+
+  .menuButton img {
+    width: 2rem;
+    height: 2rem;
+  }
+
+  .logo-area {
+    position: absolute;
+    left: 1.5rem;
+  }
+
+  .navbar {
+    padding: 0.8rem 1.5rem;
+    border-radius: var(--radius-lg);
     height: 5rem;
     width: calc(100% - 4vw);
+    position: fixed;
+    top: 2vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    overflow: hidden;
+    gap: 0;
     transition: height 0.4s cubic-bezier(0.4, 0, 0.2, 1), border-radius 0.3s ease;
+  }
+
+  .navbar.active {
+    flex-direction: column;
+    height: auto;
+    align-items: flex-start;
+  }
+
+  .nav-links-container,
+  .nav-actions {
+    padding-top: 2.5rem;
+
+    display: flex !important;
+    flex-direction: column;
+    width: 100%;
+
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
+  }
+
+  .navbar.active .nav-links-container,
+  .navbar.active .nav-actions {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    transition-delay: 0.15s;
+  }
+
+  .nav-links {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.2rem;
+    margin: 1.5rem 0;
+  }
+
+  .nav-actions {
+    flex-direction: row;
+    gap: 1.5rem;
+    padding-top: 1rem;
+    border-top: var(--border-width) dashed var(--border-color);
   }
 }
 

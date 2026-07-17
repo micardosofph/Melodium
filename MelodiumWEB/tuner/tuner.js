@@ -27,6 +27,7 @@ const statusTextEl = document.querySelector('.tuner-status-text');
 
 // Frequência de referência do Lá 4 (A4)
 const STANDARD_A4 = 440;
+const REFERENCE_VOLUME = 0.6;
 
 /**
  * Desconecta todos os nós de áudio e limpa as animações
@@ -264,12 +265,12 @@ function playReferenceTone(frequency, noteName) {
   referenceOscillator.type = 'sine';
   referenceOscillator.frequency.setValueAtTime(frequency, audioContext.currentTime);
 
-  referenceEnvelope.gain.setValueAtTime(0.01, audioContext.currentTime);
-  referenceEnvelope.gain.exponentialRampToValueAtTime(0.3, audioContext.currentTime + 0.1);
-  referenceEnvelope.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 1.2);
-
   referenceOscillator.connect(referenceEnvelope);
   referenceEnvelope.connect(audioContext.destination);
+
+  referenceEnvelope.gain.setValueAtTime(0, audioContext.currentTime);
+  referenceEnvelope.gain.linearRampToValueAtTime(REFERENCE_VOLUME, audioContext.currentTime + 0.1);
+  referenceEnvelope.gain.linearRampToValueAtTime(0, audioContext.currentTime + 1.3);
 
   referenceOscillator.start();
   referenceOscillator.stop(audioContext.currentTime + 1.3);

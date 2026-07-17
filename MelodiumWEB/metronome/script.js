@@ -21,9 +21,17 @@ let MIN_BEATS = 2;
 let MAX_BEATS = 12;
 
 let volumeMetronome = 1; //valor padrão, de 0 a 1
+const metronomeVolumeSlider = document.getElementById('metronome-volume-slider');
+const metronomeVolumeValue = document.getElementById('metronome-volume-value');
 
-function changeVolume(newVolume) {
-    volumeMetronome = parseFloat(newVolume);
+if (metronomeVolumeSlider) {
+    metronomeVolumeSlider.addEventListener('input', (event) => {
+        const volumeValue = event.target.value;
+        volumeMetronome = Number(volumeValue) / 100;
+        if (metronomeVolumeValue) {
+            metronomeVolumeValue.innerText = `${volumeValue}%`;
+        }
+    });
 }
 
 bpmSlider.oninput = () => {

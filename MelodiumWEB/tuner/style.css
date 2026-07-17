@@ -5,7 +5,7 @@
 
 /* --- Estilos do Card do Afinador --- */
 .afinador-wrapper {
-  padding-top: calc(5rem + 4vw);
+  padding-top: calc(5rem + 2vw);
   display: flex;
   justify-content: center;
 }

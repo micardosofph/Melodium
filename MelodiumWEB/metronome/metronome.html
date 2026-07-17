@@ -46,10 +46,19 @@
             </div>
             <button id="metronome-controls-button-plus" class="border-main">+</button>
         </div>
+
+        <div class="metronome-volume-panel border-main">
+            <label for="metronome-volume-slider">Volume do Clique</label>
+            <div class="metronome-volume-row">
+                <span id="metronome-volume-value">100%</span>
+                <input id="metronome-volume-slider" type="range" min="1" max="100" value="100"
+                    aria-label="Volume do metrônomo">
+            </div>
+        </div>
     </main>
 
     <script src="../global/landingHeader.js"></script>
     <script src="script.js"></script>
 </body>
-</html>
 
+</html>

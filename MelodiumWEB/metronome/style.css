@@ -42,31 +42,8 @@ body {
 }
 
 /* --- Navbar (Estilo Identidade) --- */
-.navbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0.8rem 1.5rem;
-  border-radius: var(--radius-pill);
-  background-color: var(--bg-card-white);
-  width: 100%;
-  max-width: 1200px;
-  margin-bottom: 3rem;
-  gap: 1rem;
-}
-
-.logo-area {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-weight: 700;
-  font-size: 1.25rem;
-}
-
 .logo-box {
-  background-color: var(--accent-brown);
   color: var(--bg-card-green);
-  padding: 0.2rem 0.5rem;
   border-radius: 0.4rem;
   font-size: 0.9rem;
   font-family: monospace;
@@ -114,7 +91,7 @@ body {
 #metronome {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 1.25rem;
   background-color: var(--bg-card-white);
   border-radius: var(--radius-lg);
   padding: 2.5rem;
@@ -209,6 +186,10 @@ body {
   border-radius: 50%;
   width: 2.8rem;
   height: 2.8rem;
+  min-width: 2.8rem;
+  min-height: 2.8rem;
+  aspect-ratio: 1 / 1;
+  padding: 0;
   font-size: 1.3rem;
   font-weight: 700;
   cursor: pointer;
@@ -261,6 +242,73 @@ body {
 
 #bpm-slider::-webkit-slider-thumb:hover {
   transform: scale(1.2);
+}
+
+.metronome-volume-panel {
+  display: grid;
+  gap: 0.8rem;
+  padding: 1.2rem 1rem;
+  background: var(--bg-page);
+  border: var(--border-width) solid var(--border-color);
+  border-radius: var(--radius-md);
+  text-align: left;
+}
+
+.metronome-volume-panel label {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--accent-brown);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.metronome-volume-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+#metronome-volume-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  background: transparent;
+}
+
+#metronome-volume-slider:focus {
+  outline: none;
+}
+
+#metronome-volume-slider::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 10px;
+  border-radius: var(--radius-pill);
+  background: var(--bg-card-green);
+  border: var(--border-width) solid var(--border-color);
+}
+
+#metronome-volume-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--accent-brown);
+  border: var(--border-width) solid var(--border-color);
+  margin-top: -6px;
+  cursor: pointer;
+  transition: transform 0.1s;
+}
+
+#metronome-volume-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.1);
+}
+
+#metronome-volume-value {
+  min-width: 3rem;
+  font-weight: 700;
+  color: var(--accent-brown);
 }
 
 /* Mostrador de Texto do BPM */
