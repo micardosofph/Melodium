@@ -1,0 +1,81 @@
+body {
+  min-height: 100vh;
+  padding-top: 7rem;
+}
+
+.page-shell {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 1rem 0 2rem;
+  display: grid;
+  gap: 1.2rem;
+}
+
+.hero-card {
+  background: rgba(255, 255, 255, 0.92);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  display: grid;
+  gap: 0.8rem;
+  box-shadow: 0 12px 26px rgba(97, 43, 6, 0.08);
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+
+.hero-card.is-ready {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.eyebrow {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--accent-brown);
+}
+
+.hero-card h1 {
+  font-size: clamp(1.6rem, 2.5vw, 2.3rem);
+  line-height: 1.15;
+}
+
+.bento-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.bento-card {
+  background: var(--bg-card-green);
+  border-radius: var(--radius-md);
+  padding: 1.2rem;
+  display: grid;
+  gap: 0.6rem;
+}
+
+.highlight-card {
+  background: rgba(194, 224, 188, 0.9);
+}
+
+.pill-label {
+  align-self: flex-start;
+  padding: 0.35rem 0.65rem;
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.7);
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+}
+
+@media (max-width: 768px) {
+  .hero-card {
+    padding: 1.3rem;
+  }
+
+  .bento-grid {
+    grid-template-columns: 1fr;
+  }
+}

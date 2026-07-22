@@ -6,6 +6,11 @@ let analyserNode = null;
 let animationFrameId = null;
 let isTunerRunning = false;
 
+// Controle do áudio de referência para evitar clipping e sobreposição
+let activeReferenceOscillator = null;
+let activeReferenceEnvelopeGain = null;
+let activeReferenceMasterGain = null;
+
 // Amortecimento da agulha (Filtro LERP)
 let currentPointerCents = 0;
 let targetPointerCents = 0;
@@ -32,10 +37,80 @@ const REFERENCE_VOLUME = 0.6;
 /**
  * Desconecta todos os nós de áudio e limpa as animações
  */
+function stopReferenceTone(options = {}) {
+  const fadeOutDuration = options.fadeOutDuration ?? 0;
+  const stopTime = audioContext?.currentTime ?? 0;
+
+  if (activeReferenceOscillator) {
+    try {
+      if (fadeOutDuration > 0 && activeReferenceEnvelopeGain) {
+        activeReferenceEnvelopeGain.gain.cancelScheduledValues(stopTime);
+        activeReferenceEnvelopeGain.gain.setValueAtTime(activeReferenceEnvelopeGain.gain.value || 0.0001, stopTime);
+        activeReferenceEnvelopeGain.gain.linearRampToValueAtTime(0.0001, stopTime + fadeOutDuration);
+        activeReferenceOscillator.stop(stopTime + fadeOutDuration + 0.01);
+      } else {
+        activeReferenceOscillator.stop(stopTime);
+      }
+    } catch (error) {
+      // Ignora se o oscilador já foi encerrado
+    }
+  }
+
+  if (fadeOutDuration > 0) {
+    window.setTimeout(() => {
+      try {
+        activeReferenceOscillator?.disconnect();
+      } catch (error) {
+        // Ignora disconnects já encerrados
+      }
+
+      try {
+        activeReferenceEnvelopeGain?.disconnect();
+      } catch (error) {
+        // Ignora disconnects já encerrados
+      }
+
+      try {
+        activeReferenceMasterGain?.disconnect();
+      } catch (error) {
+        // Ignora disconnects já encerrados
+      }
+
+      activeReferenceOscillator = null;
+      activeReferenceEnvelopeGain = null;
+      activeReferenceMasterGain = null;
+    }, fadeOutDuration * 1000 + 40);
+
+    return;
+  }
+
+  if (activeReferenceEnvelopeGain) {
+    try {
+      activeReferenceEnvelopeGain.disconnect();
+    } catch (error) {
+      // Ignora disconnects já encerrados
+    }
+  }
+
+  if (activeReferenceMasterGain) {
+    try {
+      activeReferenceMasterGain.disconnect();
+    } catch (error) {
+      // Ignora disconnects já encerrados
+    }
+  }
+
+  activeReferenceOscillator = null;
+  activeReferenceEnvelopeGain = null;
+  activeReferenceMasterGain = null;
+}
+
 function stopTuning() {
   isTunerRunning = false;
   if (animationFrameId) cancelAnimationFrame(animationFrameId);
   animationFrameId = null;
+
+  stopReferenceTone();
 
   try {
     if (mediaStream) {
@@ -251,29 +326,59 @@ function playReferenceTone(frequency, noteName) {
   if (!audioContext) {
     audioContext = new (window.AudioContext || window.webkitAudioContext)();
   }
-  
+
   if (audioContext.state === 'suspended') {
     audioContext.resume();
   }
 
+  const currentTime = audioContext.currentTime;
+
+  if (activeReferenceOscillator) {
+    try {
+      activeReferenceEnvelopeGain.gain.cancelScheduledValues(currentTime);
+      activeReferenceEnvelopeGain.gain.setValueAtTime(0, currentTime);
+      activeReferenceOscillator.stop(currentTime + 0.001);
+    } catch (error) {
+      // Ignora se o nó anterior já estiver encerrado
+    }
+
+    try {
+      activeReferenceOscillator.disconnect();
+      activeReferenceEnvelopeGain.disconnect();
+      activeReferenceMasterGain.disconnect();
+    } catch (error) {
+      // Ignora disconnects já encerrados
+    }
+  }
+
   if (noteDisplayEl) noteDisplayEl.textContent = noteName;
   if (frequencyDisplayEl) frequencyDisplayEl.textContent = `Referência: ${frequency.toFixed(2)} Hz`;
-  
+
   const referenceOscillator = audioContext.createOscillator();
   const referenceEnvelope = audioContext.createGain();
+  const referenceMasterGain = audioContext.createGain();
+
+  activeReferenceOscillator = referenceOscillator;
+  activeReferenceEnvelopeGain = referenceEnvelope;
+  activeReferenceMasterGain = referenceMasterGain;
 
   referenceOscillator.type = 'sine';
-  referenceOscillator.frequency.setValueAtTime(frequency, audioContext.currentTime);
+  referenceOscillator.frequency.setValueAtTime(frequency, currentTime);
+
+  referenceEnvelope.gain.cancelScheduledValues(currentTime);
+  referenceEnvelope.gain.setValueAtTime(0.0001, currentTime);
+  referenceEnvelope.gain.linearRampToValueAtTime(0.6, currentTime + 0.03);
+  referenceEnvelope.gain.linearRampToValueAtTime(0.0001, currentTime + 1.0);
+
+  referenceMasterGain.gain.cancelScheduledValues(currentTime);
+  referenceMasterGain.gain.setValueAtTime(0.3, currentTime);
 
   referenceOscillator.connect(referenceEnvelope);
-  referenceEnvelope.connect(audioContext.destination);
+  referenceEnvelope.connect(referenceMasterGain);
+  referenceMasterGain.connect(audioContext.destination);
 
-  referenceEnvelope.gain.setValueAtTime(0, audioContext.currentTime);
-  referenceEnvelope.gain.linearRampToValueAtTime(REFERENCE_VOLUME, audioContext.currentTime + 0.1);
-  referenceEnvelope.gain.linearRampToValueAtTime(0, audioContext.currentTime + 1.3);
-
-  referenceOscillator.start();
-  referenceOscillator.stop(audioContext.currentTime + 1.3);
+  referenceOscillator.start(currentTime);
+  referenceOscillator.stop(currentTime + 1.0);
 }
 
 // Alterna o estado de ativação do microfone (Gatilho único)

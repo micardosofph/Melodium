@@ -51,6 +51,26 @@
     headerOverlayEl?.classList.toggle('active');
   };
 
+  function highlightActiveNavLink() {
+    const currentPathname = window.location.pathname.replace(/\/+$/, '') || '/';
+    const navLinks = document.querySelectorAll('.nav-links a');
+
+    navLinks.forEach((link) => {
+      link.classList.remove('active');
+    });
+
+    navLinks.forEach((link) => {
+      const linkHref = link.getAttribute('href') || '';
+      const linkPathname = new URL(linkHref, window.location.href).pathname.replace(/\/+$/, '') || '/';
+      const isCurrentPage =
+        linkPathname === currentPathname || currentPathname.endsWith(linkPathname);
+
+      if (isCurrentPage) {
+        link.classList.add('active');
+      }
+    });
+  }
+
   // Carrega dinamicamente o arquivo header.html
   async function injectHeaderComponent() {
     const targetPlaceholderEl = document.getElementById(PLACEHOLDER_ID);
@@ -69,6 +89,7 @@
         const htmlTemplate = await response.text();
         targetPlaceholderEl.innerHTML = htmlTemplate;
         attachOverlayCloseEvent();
+        highlightActiveNavLink();
         console.log('[HeaderComponent] Cabeçalho carregado com sucesso!');
         return;
       } catch (error) {

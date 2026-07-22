@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Melodium | Rotinas</title>
+    <link rel="stylesheet" href="../global/style.css" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="headerSafeArea" aria-hidden="true"></div>
+    <div class="headerOverlay" aria-hidden="true"></div>
+    <div id="header-placeholder"></div>
+
+    <main class="page-shell">
+      <section class="hero-card border-main">
+        <p class="eyebrow">Rotinas guiadas</p>
+        <h1>Organize sua prática com intensidade, silêncio e descanso inteligente.</h1>
+        <p class="hero-copy">
+          Cada bloco abaixo foi desenhado para apoiar um desenvolvimento real da técnica, da escuta e da constância.
+          Escolha um nível e siga um plano que cabe na sua rotina semanal.
+        </p>
+      </section>
+
+      <section class="filters-section" aria-label="Filtros de nível">
+        <button class="level-chip active" data-level="all" type="button">Todos</button>
+        <button class="level-chip" data-level="beginner" type="button">Iniciante</button>
+        <button class="level-chip" data-level="intermediate" type="button">Intermediário</button>
+        <button class="level-chip" data-level="advanced" type="button">Avançado</button>
+      </section>
+
+      <section class="training-grid">
+        <article class="training-card border-main" data-level="beginner">
+          <div class="training-top">
+            <p class="pill-label">Aquecimento rítmico</p>
+            <span class="training-time">10 min</span>
+          </div>
+          <h2>AQUECIMENTO RÍTMICO — 10 MIN</h2>
+          <p class="training-goal">Meta diária: 1 ciclo completo com atenção ao pulso.</p>
+          <ul class="exercise-list">
+            <li><label><input type="checkbox" checked /> Pulso com palmas</label></li>
+            <li><label><input type="checkbox" checked /> Marcha em 4/4</label></li>
+            <li><label><input type="checkbox" /> Sustentação do tempo</label></li>
+          </ul>
+          <button class="btn-signup border-main" type="button">Iniciar treino</button>
+        </article>
+
+        <article class="training-card border-main" data-level="intermediate">
+          <div class="training-top">
+            <p class="pill-label">Independência de dedos</p>
+            <span class="training-time">20 min</span>
+          </div>
+          <h2>INDEPENDÊNCIA DE DEDOS — 20 MIN</h2>
+          <p class="training-goal">Meta diária: dois rounds com precisão e silêncio entre as notas.</p>
+          <ul class="exercise-list">
+            <li><label><input type="checkbox" checked /> Pattern de alternância</label></li>
+            <li><label><input type="checkbox" checked /> Flexão de articulação</label></li>
+            <li><label><input type="checkbox" /> Repetição com metrônomo</label></li>
+          </ul>
+          <button class="btn-signup border-main" type="button">Iniciar treino</button>
+        </article>
+
+        <article class="training-card border-main" data-level="advanced">
+          <div class="training-top">
+            <p class="pill-label">Escalas e improviso</p>
+            <span class="training-time">30 min</span>
+          </div>
+          <h2>ESCALAS &amp; IMPROVISAÇÃO — 30 MIN</h2>
+          <p class="training-goal">Meta diária: conectar escalas, fraseado e percepção de tonalidade.</p>
+          <ul class="exercise-list">
+            <li><label><input type="checkbox" checked /> Escala maior em 4 vozes</label></li>
+            <li><label><input type="checkbox" checked /> Fraseado com variação rítmica</label></li>
+            <li><label><input type="checkbox" /> Improviso guiado com gravação</label></li>
+          </ul>
+          <button class="btn-signup border-main" type="button">Iniciar treino</button>
+        </article>
+      </section>
+    </main>
+
+    <script src="../global/header.js"></script>
+    <script src="routines.js"></script>
+  </body>
+</html>

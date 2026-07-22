@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Melodium | Entrar ou Cadastrar</title>
+    <link rel="stylesheet" href="../global/style.css" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="headerSafeArea" aria-hidden="true"></div>
+    <div class="headerOverlay" aria-hidden="true"></div>
+    <div id="header-placeholder"></div>
+
+    <main class="auth-shell">
+      <section class="auth-card border-main" aria-labelledby="auth-title">
+        <div class="auth-intro">
+          <p class="eyebrow">Bem-vindo ao Melodium</p>
+          <h1 id="auth-title">Acesse sua conta ou crie uma nova jornada.</h1>
+          <p class="auth-copy">Entre para continuar sua rotina ou cadastre-se para guardar seus caminhos musicais.</p>
+        </div>
+
+        <div class="auth-switch" role="tablist" aria-label="Alternar entre login e cadastro">
+          <button class="auth-tab" data-mode="login" type="button">Entrar</button>
+          <button class="auth-tab" data-mode="signup" type="button">Cadastre-se</button>
+        </div>
+
+        <form class="auth-form" id="loginForm" novalidate>
+          <label for="userEmailInput">
+            E-mail
+            <input id="userEmailInput" name="email" type="email" placeholder="seu@email.com" required />
+          </label>
+          <label for="userPasswordInput">
+            Senha
+            <input id="userPasswordInput" name="password" type="password" placeholder="••••••••" required />
+          </label>
+          <button class="btn-signup border-main" type="submit">Entrar</button>
+        </form>
+
+        <form class="auth-form" id="signupForm" novalidate>
+          <label for="userNameInput">
+            Nome
+            <input id="userNameInput" name="name" type="text" placeholder="Seu nome" required />
+          </label>
+          <label for="signupEmailInput">
+            E-mail
+            <input id="signupEmailInput" name="email" type="email" placeholder="seu@email.com" required />
+          </label>
+          <label for="signupPasswordInput">
+            Senha
+            <input id="signupPasswordInput" name="password" type="password" placeholder="Crie uma senha" required />
+          </label>
+          <button class="btn-signup border-main" type="submit">Criar conta</button>
+        </form>
+      </section>
+    </main>
+
+    <script src="../global/header.js"></script>
+    <script src="auth.js"></script>
+  </body>
+</html>
