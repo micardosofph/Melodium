@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dicionário Inverso de Acordes</title>
+    <link rel="stylesheet" href="../global/style.css" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="headerSafeArea" aria-hidden="true"></div>
+    <div class="headerOverlay" aria-hidden="true"></div>
+    <div id="header-placeholder"></div>
+
+    <main class="page-shell">
+      <div class="container">
+        <h1>Dicionário Inverso de Acordes</h1>
+        <p class="subtitle">Clique nas casas do braço para montar o acorde e descobrir o nome:</p>
+
+        <div class="result-card">
+          <span class="label">Acorde Identificado:</span>
+          <h2 id="chord-name">Selecione as notas...</h2>
+          <p id="chord-notes" class="notes-info"></p>
+        </div>
+
+        <div class="fretboard-wrapper">
+          <div id="fretboard" class="fretboard"></div>
+        </div>
+
+        <button id="btn-clear" class="btn-clear">Limpar Seleção</button>
+      </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/tonal@4.10.0/browser/tonal.min.js"></script>
+    <script src="../global/header.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
