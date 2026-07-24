@@ -1,0 +1,508 @@
+/* ==========================================================================
+MELODIUM - ESTILOS DA LISTA DE TAREFAS (TO-DO)
+========================================================================== */
+
+:root {
+--bg-main: #f4f6f1;
+--card-green: #c5dcb9;
+--card-green-light: #dbead3;
+--card-white: #ffffff;
+--text-dark: #381e09;
+--text-muted: #685038;
+--accent-dark: #2b1504;
+--border-subtle: rgba(56, 30, 9, 0.1);
+--shadow-sm: 0 4px 12px rgba(56, 30, 9, 0.04);
+--font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+--radius-lg: 24px;
+--radius-md: 16px;
+--radius-sm: 12px;
+}
+
+/* Reset básico */
+
+*{
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+}
+
+body {
+background-color: var(--bg-main);
+color: var(--text-dark);
+font-family: var(--font-family);
+min-height: 100vh;
+display: flex;
+flex-direction: column;
+}
+
+/* --------------------------------------------------------------------------
+Cabeçalho
+-------------------------------------------------------------------------- */
+.header {
+width: 100%;
+max-width: 1100px;
+margin: 0 auto;
+padding: 24px;
+display: flex;
+align-items: center;
+justify-content: space-between;
+}
+
+.logo-group {
+display: flex;
+align-items: center;
+gap: 12px;
+text-decoration: none;
+color: var(--text-dark);
+}
+
+.logo-box {
+width: 40px;
+height: 40px;
+border-radius: var(--radius-sm);
+background-color: var(--card-green);
+display: flex;
+align-items: center;
+justify-content: center;
+font-weight: 800;
+border: 1px solid var(--border-subtle);
+transition: transform 0.2s ease;
+}
+
+.logo-group:hover .logo-box {
+transform: scale(1.05);
+}
+
+.logo-text {
+font-weight: 800;
+font-size: 1.25rem;
+letter-spacing: -0.02em;
+}
+
+.nav-links {
+display: none;
+gap: 24px;
+font-weight: 600;
+font-size: 0.875rem;
+}
+
+@media (min-width: 768px) {
+.nav-links {
+display: flex;
+}
+}
+
+.nav-links a {
+text-decoration: none;
+color: var(--text-muted);
+transition: color 0.2s ease;
+}
+
+.nav-links a:hover {
+color: var(--text-dark);
+}
+
+.btn-back {
+padding: 8px 16px;
+border-radius: var(--radius-sm);
+background-color: var(--card-green);
+color: var(--text-dark);
+font-weight: 700;
+font-size: 0.75rem;
+text-decoration: none;
+transition: background-color 0.2s ease;
+}
+
+.btn-back:hover {
+background-color: var(--card-green-light);
+}
+
+/* --------------------------------------------------------------------------
+Main Container
+-------------------------------------------------------------------------- */
+.main-container {
+flex: 1;
+width: 100%;
+max-width: 850px;
+margin: 0 auto;
+padding: 32px 16px;
+display: flex;
+flex-direction: column;
+gap: 24px;
+}
+
+.card {
+background-color: var(--card-white);
+border-radius: var(--radius-lg);
+padding: 24px;
+border: 1px solid var(--border-subtle);
+box-shadow: var(--shadow-sm);
+}
+
+/* --------------------------------------------------------------------------
+Banner da Seção
+-------------------------------------------------------------------------- */
+.banner-card {
+background-color: var(--card-green);
+border-radius: var(--radius-lg);
+padding: 32px;
+border: 1px solid var(--border-subtle);
+box-shadow: var(--shadow-sm);
+display: flex;
+flex-direction: column;
+gap: 24px;
+}
+
+@media (min-width: 768px) {
+.banner-card {
+flex-direction: row;
+align-items: center;
+justify-content: space-between;
+}
+}
+
+.badge {
+display: inline-block;
+padding: 4px 12px;
+border-radius: 999px;
+background-color: rgba(56, 30, 9, 0.1);
+color: var(--text-dark);
+font-weight: 800;
+font-size: 0.75rem;
+text-transform: uppercase;
+letter-spacing: 0.05em;
+margin-bottom: 12px;
+}
+
+.banner-title {
+font-size: 1.875rem;
+font-weight: 800;
+color: var(--text-dark);
+margin-bottom: 8px;
+letter-spacing: -0.02em;
+}
+
+.banner-subtitle {
+color: var(--text-muted);
+font-weight: 500;
+font-size: 1rem;
+}
+
+.counter-box {
+background-color: rgba(255, 255, 255, 0.85);
+backdrop-filter: blur(8px);
+border-radius: var(--radius-md);
+padding: 16px 24px;
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+border: 1px solid rgba(56, 30, 9, 0.05);
+min-width: 140px;
+}
+
+.counter-label {
+font-size: 0.75rem;
+font-weight: 700;
+color: var(--text-muted);
+text-transform: uppercase;
+letter-spacing: 0.05em;
+}
+
+.counter-value {
+font-size: 1.875rem;
+font-weight: 800;
+color: var(--text-dark);
+}
+
+/* --------------------------------------------------------------------------
+Formulário
+-------------------------------------------------------------------------- */
+.todo-form {
+display: flex;
+flex-direction: column;
+gap: 12px;
+}
+
+@media (min-width: 640px) {
+.todo-form {
+flex-direction: row;
+}
+}
+
+.input-text {
+flex: 1;
+padding: 14px 20px;
+border-radius: var(--radius-md);
+background-color: var(--bg-main);
+border: 1px solid var(--border-subtle);
+color: var(--text-dark);
+font-family: inherit;
+font-weight: 500;
+font-size: 0.95rem;
+outline: none;
+transition: border-color 0.2s;
+}
+
+.input-text:focus {
+border-color: var(--text-dark);
+}
+
+.input-select {
+padding: 14px 16px;
+border-radius: var(--radius-md);
+background-color: var(--bg-main);
+border: 1px solid var(--border-subtle);
+color: var(--text-dark);
+font-family: inherit;
+font-weight: 600;
+font-size: 0.9rem;
+outline: none;
+cursor: pointer;
+}
+
+.btn-primary {
+padding: 14px 24px;
+border-radius: var(--radius-md);
+background-color: var(--text-dark);
+color: #ffffff;
+font-weight: 700;
+font-size: 0.95rem;
+border: none;
+cursor: pointer;
+transition: background-color 0.2s, transform 0.1s;
+}
+
+.btn-primary:hover {
+background-color: var(--accent-dark);
+}
+
+.btn-primary:active {
+transform: scale(0.98);
+}
+
+/* --------------------------------------------------------------------------
+Lista de Tarefas
+-------------------------------------------------------------------------- */
+.list-header {
+display: flex;
+align-items: center;
+justify-content: space-between;
+padding-bottom: 16px;
+border-bottom: 1px solid var(--bg-main);
+}
+
+.list-header h2 {
+font-size: 1.125rem;
+font-weight: 700;
+color: var(--text-dark);
+}
+
+.filter-group {
+display: flex;
+gap: 8px;
+}
+
+.filter-btn {
+padding: 6px 12px;
+border-radius: var(--radius-sm);
+font-size: 0.75rem;
+font-weight: 700;
+border: none;
+background-color: var(--bg-main);
+color: var(--text-muted);
+cursor: pointer;
+transition: all 0.2s ease;
+}
+
+.filter-btn:hover {
+background-color: var(--card-green-light);
+}
+
+.filter-btn.active {
+background-color: var(--card-green);
+color: var(--text-dark);
+}
+
+.task-list {
+list-style: none;
+display: flex;
+flex-direction: column;
+gap: 12px;
+margin-top: 16px;
+min-height: 160px;
+}
+
+/* Estado Vazio */
+.empty-state {
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+padding: 40px 0;
+text-align: center;
+}
+
+.empty-icon {
+width: 48px;
+height: 48px;
+border-radius: var(--radius-md);
+background-color: rgba(197, 220, 185, 0.4);
+display: flex;
+align-items: center;
+justify-content: center;
+font-size: 1.5rem;
+margin-bottom: 12px;
+}
+
+.empty-title {
+font-weight: 700;
+color: var(--text-dark);
+font-size: 1rem;
+}
+
+.empty-desc {
+font-size: 0.875rem;
+color: var(--text-muted);
+margin-top: 4px;
+}
+
+/* --------------------------------------------------------------------------
+Itens de Tarefa Dinâmicos (Adicionados via JS)
+-------------------------------------------------------------------------- */
+.task-item {
+display: flex;
+align-items: center;
+gap: 16px;
+padding: 16px;
+background-color: var(--bg-main);
+border-radius: var(--radius-md);
+border: 1px solid var(--border-subtle);
+transition: all 0.2s ease;
+}
+
+.task-item:hover {
+border-color: rgba(56, 30, 9, 0.25);
+transform: translateY(-1px);
+box-shadow: 0 2px 8px rgba(56, 30, 9, 0.04);
+}
+
+.task-item.completed {
+opacity: 0.65;
+background-color: rgba(244, 246, 241, 0.6);
+}
+
+.task-item.completed .task-title {
+text-decoration: line-through;
+color: var(--text-muted);
+}
+
+/* Checkbox Customizado */
+.task-checkbox-container {
+position: relative;
+display: flex;
+align-items: center;
+justify-content: center;
+cursor: pointer;
+user-select: none;
+}
+
+.task-checkbox-container input {
+position: absolute;
+opacity: 0;
+cursor: pointer;
+height: 0;
+width: 0;
+}
+
+.checkmark {
+width: 22px;
+height: 22px;
+background-color: var(--card-white);
+border: 2px solid var(--border-subtle);
+border-radius: 6px;
+transition: all 0.2s ease;
+display: flex;
+align-items: center;
+justify-content: center;
+}
+
+.task-checkbox-container:hover input ~ .checkmark {
+border-color: var(--text-dark);
+}
+
+.task-checkbox-container input:checked ~ .checkmark {
+background-color: var(--text-dark);
+border-color: var(--text-dark);
+}
+
+.checkmark:after {
+content: "";
+display: none;
+width: 5px;
+height: 10px;
+border: solid white;
+border-width: 0 2px 2px 0;
+transform: rotate(45deg);
+margin-bottom: 2px;
+}
+
+.task-checkbox-container input:checked ~ .checkmark:after {
+display: block;
+}
+
+/* Conteúdo da Tarefa */
+.task-content {
+flex: 1;
+display: flex;
+flex-direction: column;
+gap: 4px;
+}
+
+.task-title {
+font-weight: 600;
+font-size: 0.95rem;
+color: var(--text-dark);
+word-break: break-word;
+}
+
+.task-category-badge {
+font-size: 0.75rem;
+font-weight: 700;
+color: var(--text-muted);
+display: inline-flex;
+align-items: center;
+gap: 4px;
+}
+
+/* Botão de Excluir */
+.btn-delete {
+background: transparent;
+border: none;
+color: var(--text-muted);
+cursor: pointer;
+padding: 8px;
+border-radius: var(--radius-sm);
+display: flex;
+align-items: center;
+justify-content: center;
+transition: all 0.2s ease;
+opacity: 0.7;
+}
+
+.btn-delete:hover {
+color: #c0392b;
+background-color: rgba(192, 57, 43, 0.1);
+opacity: 1;
+}
+
+/* --------------------------------------------------------------------------
+Rodapé
+-------------------------------------------------------------------------- */
+.footer {
+padding: 24px;
+text-align: center;
+font-size: 0.75rem;
+font-weight: 600;
+color: var(--text-muted);
+}
