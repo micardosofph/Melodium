@@ -38,10 +38,14 @@ body {
 }
 
 .icon-diamond {
+  position: absolute;
   width: 1em;
   height: 1em;
   color: var(--accent-brown);
   flex-shrink: 0;
+
+  top: 1.2rem;
+  left: 1.2rem;
 }
 
 /* --- Navbar / Header --- */
@@ -461,11 +465,6 @@ body {
   font-weight: 600;
 }
 
-.dots-icon {
-  font-size: 1.2rem;
-  cursor: pointer;
-}
-
 .image-container-circle {
   width: 8.5rem;
   height: 8.5rem;
@@ -487,7 +486,7 @@ body {
 
 /* --- HERO SEÇÃO (Proposta de Valor) --- */
 .hero-section {
-  padding: 1rem 0 2rem 1.5rem;
+  padding-top: 1rem;
 
   display: flex;
   flex-direction: column;
@@ -500,6 +499,7 @@ body {
   line-height: 1.1;
   margin-bottom: 1.5rem;
   position: relative;
+  text-align: left;
 }
 
 .inline-badge-icon {
@@ -527,8 +527,6 @@ body {
 .hero-desc {
   font-size: clamp(0.95rem, 1.1vw, 1.1rem);
   color: var(--accent-brown);
-  opacity: 0.9;
-  max-width: 90%;
   margin-bottom: 2rem;
 
   text-align: justify;
@@ -537,7 +535,6 @@ body {
 .hero-cta-group {
   display: flex;
   gap: 1rem;
-  margin-bottom: 3.5rem;
   flex-wrap: wrap;
 }
 
@@ -570,6 +567,12 @@ body {
   gap: 1rem;
 }
 
+.btn-primary,
+.btn-secondary {
+  width: 100%;
+  justify-content: space-between;
+}
+
 .play-icon-container {
   width: 1.8rem;
   height: 1.8rem;
@@ -592,11 +595,15 @@ body {
 .card-stat-small {
   padding: 1.2rem;
   min-height: 8.5rem;
-  justify-content: space-between;
+  justify-content:center;
   height: 100%;
 }
 
 .badge-tag-sm {
+  position: absolute;
+  top: 1.2rem;
+  right: 1.2rem;
+
   align-self: flex-start;
   border: var(--border-width) solid var(--border-color);
   background-color: var(--bg-card-green);
@@ -692,7 +699,7 @@ body {
     height: 2rem;
   }
 
-  .logo-area{
+  .logo-area {
     position: absolute;
     left: 1.5rem;
   }
@@ -727,16 +734,16 @@ body {
     align-items: flex-start;
   }
 
-.menuButton {
+  .menuButton {
     display: flex !important;
     width: 2rem;
     height: 2rem;
-}
+  }
 
-.menuButton img {
-  width: 2rem;
-  height: 2rem;
-}
+  .menuButton img {
+    width: 2rem;
+    height: 2rem;
+  }
 
   .nav-links-container,
   .nav-actions {

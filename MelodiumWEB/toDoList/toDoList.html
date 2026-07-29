@@ -1,31 +1,28 @@
-<!-- Cabeçalho / Navegação -->
-<header class="header">
-    <a href="../landingPage/landingPage.html" class="logo-group">
-        <div class="logo-box">Me</div>
-        <span class="logo-text">Melodium</span>
-    </a>
-    
-    <nav class="nav-links">
-        <a href="../landingPage/landingPage.html">Voltar ao Início</a>
-        <a href="#">Rotinas Guiadas</a>
-        <a href="#">Aba Social</a>
-    </nav>
+<link rel="stylesheet" href="../global/style.css">
+<link rel="stylesheet" href="toDoList.css">
 
-    <a href="../landingPage/landingPage.html" class="btn-back">
-        ← Voltar
-    </a>
-    <link rel="stylesheet" href="toDoList.css">
-</header>
+
+<div id="header-placeholder"></div>
+
+
+<div class="headerOverlay">
+
+</div>
+
+<div class="headerSafeArea">
+
+</div>
 
 <!-- Conteúdo Principal -->
 <main class="main-container">
-    
+
     <!-- Cabeçalho da Seção (Banner de Boas-Vindas) -->
     <section class="banner-card">
         <div class="banner-info">
             <span class="badge">Painel de Exercícios</span>
             <h1 class="banner-title">Lista de Tarefas (To-Do)</h1>
-            <p class="banner-subtitle">Evite a preguiça. Organize sua rotina de estudos musicais, metrônomo e escalas.</p>
+            <p class="banner-subtitle">Evite a preguiça. Organize sua rotina de estudos musicais, metrônomo e escalas.
+            </p>
         </div>
 
         <!-- Contador de Progresso -->
@@ -38,13 +35,8 @@
     <!-- Formulário para Adicionar Tarefa -->
     <section class="card form-card">
         <form id="todoForm" class="todo-form">
-            <input 
-                type="text" 
-                id="taskInput" 
-                placeholder="Ex: Treinar escala maior em 120 BPM..." 
-                class="input-text"
-                required
-            >
+            <input type="text" id="taskInput" placeholder="Ex: Treinar escala maior em 120 BPM..." class="input-text"
+                required>
             <select id="categorySelect" class="input-select">
                 <option value="Tecnica">🎸 Técnica</option>
                 <option value="Teoria">🎼 Teoria</option>
@@ -87,4 +79,5 @@
 </footer>
 
 <!-- Arquivo JavaScript -->
+<script src="../global/header.js"></script>
 <script src="toDolist.js"></script>
