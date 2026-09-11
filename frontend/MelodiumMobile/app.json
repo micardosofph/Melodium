@@ -7,7 +7,10 @@
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSMicrophoneUsageDescription": "Precisamos do acesso ao microfone para capturar as notas do seu instrumento no afinador."
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -16,7 +19,10 @@
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
-      "package": "com.melodium.mobile"
+      "package": "com.melodium.mobile",
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -25,6 +31,9 @@
       "eas": {
         "projectId": "2d6983ef-6fc1-457c-bf88-7dbcb100eebc"
       }
-    }
+    },
+    "plugins": [
+      "expo-audio"
+    ]
   }
 }
