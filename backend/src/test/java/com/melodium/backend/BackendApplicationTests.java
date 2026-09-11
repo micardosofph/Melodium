@@ -1,10 +1,10 @@
-package br.com.melodium.api;
+package com.melodium.backend;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class ApiApplicationTests {
+class BackendApplicationTests {
 
 	@Test
 	void contextLoads() {

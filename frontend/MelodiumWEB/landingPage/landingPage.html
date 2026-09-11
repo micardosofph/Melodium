@@ -226,3 +226,46 @@
 </body>
 
 </html>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Melodium - Teste de Conexão</title>
+</head>
+<body>
+
+    <h1>Teste de Integração - Melodium Web</h1>
+    <p id="status">Testando conexão com o backend...</p>
+    <ul id="lista-usuarios"></ul>
+
+    <script>
+        // Faz a requisição para o seu Spring Boot rodando na porta 8080
+        fetch('http://localhost:8080/usuarios')
+            .then(response => response.json())
+            .then(data => {
+                const statusEl = document.getElementById('status');
+                statusEl.textContent = 'Conectado com sucesso ao Backend!';
+                statusEl.style.color = 'green';
+
+                const listaEl = document.getElementById('lista-usuarios');
+                
+                if (data.length === 0) {
+                    listaEl.innerHTML = '<li>Nenhum usuário cadastrado no banco ainda.</li>';
+                } else {
+                    data.forEach(usuario => {
+                        const li = document.createElement('li');
+                        li.textContent = `ID: ${usuario.id_usuario} - Nome: ${usuario.nome}`;
+                        listaEl.appendChild(li);
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Erro:', error);
+                const statusEl = document.getElementById('status');
+                statusEl.textContent = 'Erro ao conectar com o backend. O Java está rodando?';
+                statusEl.style.color = 'red';
+            });
+    </script>
+
+</body>
+</html>
