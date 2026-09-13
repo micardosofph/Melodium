@@ -42,11 +42,69 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   authForms.forEach((form) => {
-    form.addEventListener('submit', (event) => {
+    form.addEventListener('submit', async (event) => {
       event.preventDefault();
+      
       const submitButton = form.querySelector('button');
-      if (submitButton) {
-        submitButton.textContent = form.id === 'signupForm' ? 'Conta criada!' : 'Entrando...';
+      const textOriginal = submitButton.textContent;
+      submitButton.textContent = 'Carregando...';
+      submitButton.disabled = true;
+
+      try {
+        if (form.id === 'signupForm') {
+          const nome = form.querySelector('#userNameInput').value;
+          const email = form.querySelector('#signupEmailInput').value;
+          const senha = form.querySelector('#signupPasswordInput').value;
+
+          const resposta = await fetch('http://localhost:8080/usuarios', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+              nome: nome, 
+              email: email, 
+              senha_hash: senha 
+            })
+          });
+
+          if (resposta.ok) {
+            alert('Conta criada com sucesso! Faça login para entrar.');
+            form.reset();
+            switchAuthMode('login'); 
+          } else {
+            alert('Erro ao criar conta. Verifique os dados.');
+          }
+
+        } else if (form.id === 'loginForm') {
+          const email = form.querySelector('#userEmailInput').value;
+          const senha = form.querySelector('#userPasswordInput').value;
+
+          const resposta = await fetch('http://localhost:8080/usuarios/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+              email: email, 
+              senha_hash: senha 
+            })
+          });
+
+          if (resposta.ok) {
+            const usuarioLogado = await resposta.json();
+            alert(`Bem-vindo, ${usuarioLogado.nome}!`);
+            
+            localStorage.setItem('usuarioMelodium', JSON.stringify(usuarioLogado));
+            
+            
+            window.location.href = '../landingPage/landingPage.html'; 
+          } else {
+            alert('E-mail ou senha inválidos!');
+          }
+        }
+      } catch (erro) {
+        console.error('Erro:', erro);
+        alert('Erro ao conectar com o servidor. O Java está rodando?');
+      } finally {
+        submitButton.textContent = textOriginal;
+        submitButton.disabled = false;
       }
     });
   });

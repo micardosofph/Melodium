@@ -1,10 +1,9 @@
 package com.melodium.backend.model;
 
 import jakarta.persistence.*;
-import java.util.List;
 
 @Entity
-@Table(name = "USUARIOS")
+@Table(name = "usuarios")
 public class Usuario {
 
     @Id
@@ -15,16 +14,44 @@ public class Usuario {
     private String email;
     private String senha_hash;
 
-    // Relação (1, 1) com GAMIFICACAO
-    @OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL)
-    private Gamificacao gamificacao;
+    public Usuario() {
+    }
 
-    // Relação (1, N) com TAREFAS
-    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
-    private List<Tarefa> tarefas;
+    public Usuario(String nome, String email, String senha_hash) {
+        this.nome = nome;
+        this.email = email;
+        this.senha_hash = senha_hash;
+    }
 
-    // Relação (1, N) com POSTAGENS
-    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
-    private List<Postagem> postagens;
+    public Long getId_usuario() {
+        return id_usuario;
+    }
 
+    public void setId_usuario(Long id_usuario) {
+        this.id_usuario = id_usuario;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getSenha_hash() {
+        return senha_hash;
+    }
+
+    public void setSenha_hash(String senha_hash) {
+        this.senha_hash = senha_hash;
+    }
 }
