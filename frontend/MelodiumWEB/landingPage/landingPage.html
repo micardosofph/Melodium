@@ -31,8 +31,8 @@
             <div class="card card-programs border-main row-span-3" aria-label="Estatística de Engajamento">
                 <div class="card-header-row">
                     <div>
-                        <div class="stat-big">45 Dias</div>
-                        <div class="stat-label">Ofensiva de Prática Atual</div>
+                        <div class="stat-big" id="valor-ofensiva">45 Dias</div>
+                        <div class="stat-label" id="texto-ofensiva">Ofensiva de Prática Atual</div>
                     </div>
                     <div class="btn-arrow-circle border-main">
                         <span style="font-size: 1.2rem;">🔥</span>
@@ -239,7 +239,6 @@
     <ul id="lista-usuarios"></ul>
 
     <script>
-        // Faz a requisição para o seu Spring Boot rodando na porta 8080
         fetch('http://localhost:8080/usuarios')
             .then(response => response.json())
             .then(data => {

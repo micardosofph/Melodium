@@ -66,47 +66,39 @@ async function registrarTreinoDoDia() {
         console.error('Erro ao atualizar ofensiva:', erro);
     }
 }
-async function testarOfensiva() {
+
+function carregarCardOfensiva() {
+    // Busca os elementos do card pelo ID que criamos no HTML
+    const valorOfensivaEl = document.getElementById('valor-ofensiva');
+    const textoOfensivaEl = document.getElementById('texto-ofensiva');
+
+    // Se a página não tiver esses elementos (ex: em outra tela), a função para aqui
+    if (!valorOfensivaEl || !textoOfensivaEl) return;
+
+    // Busca o usuário logado
     const usuarioSalvo = JSON.parse(localStorage.getItem('usuarioMelodium'));
 
+    // 1. Cenário: Nenhum usuário logado
     if (!usuarioSalvo || !usuarioSalvo.id_usuario) {
-        console.warn('Nenhum usuário logado no localStorage para testar a ofensiva.');
+        valorOfensivaEl.textContent = "-";
+        textoOfensivaEl.textContent = "Faça login para ver sua ofensiva.";
         return;
     }
 
-    try {
-        const resposta = await fetch(`http://localhost:8080/usuarios/${usuarioSalvo.id_usuario}/ofensiva`, {
-            method: 'POST'
-        });
+    // Pega os dias do usuário (se for nulo, assume 0)
+    const dias = usuarioSalvo.ofensiva || 0;
 
-        if (resposta.ok) {
-            const usuarioAtualizado = await resposta.json();
-            
-            localStorage.setItem('usuarioMelodium', JSON.stringify(usuarioAtualizado));
-
-            let containerTeste = document.getElementById('teste-ofensiva-container');
-            if (!containerTeste) {
-                containerTeste = document.createElement('div');
-                containerTeste.id = 'teste-ofensiva-container';
-                containerTeste.style.marginTop = '20px';
-                containerTeste.style.padding = '10px';
-                containerTeste.style.borderTop = '1px solid #ccc';
-                document.body.appendChild(containerTeste);
-            }
-
-            containerTeste.innerHTML = `
-                <h3 style="color: #2e7d32; margin: 0 0 5px 0;">Teste de Ofensiva - Melodium Web</h3>
-                <p style="margin: 0; font-size: 16px;">
-                    🔥 <strong>Ofensiva Atual:</strong> ${usuarioAtualizado.ofensiva} dia(s) sequenciais
-                </p>
-                <small style="color: #666;">Última atividade registrada: ${usuarioAtualizado.ultimaAtividade || 'Hoje'}</small>
-            `;
-        } else {
-            console.error('Erro na resposta da API de ofensiva.');
-        }
-    } catch (erro) {
-        console.error('Erro ao conectar com o endpoint de ofensiva:', erro);
+    // 2. Cenário: Usuário logado, mas ofensiva é zero
+    if (dias === 0) {
+        valorOfensivaEl.textContent = "0 Dias";
+        textoOfensivaEl.textContent = "Inicie sua rotina musical hoje!";
+    } 
+    // 3. Cenário: Usuário logado com ofensiva ativa
+    else {
+        // Usa um pequeno truque (dias > 1 ? 's' : '') para não escrever "1 Dias"
+        valorOfensivaEl.textContent = `${dias} Dia${dias > 1 ? 's' : ''}`;
+        textoOfensivaEl.textContent = "Ofensiva de Prática Atual";
     }
 }
 
-testarOfensiva();
+carregarCardOfensiva();
