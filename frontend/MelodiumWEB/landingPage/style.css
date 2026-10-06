@@ -829,3 +829,12 @@ a:-webkit-any-link {
   text-decoration: none;
   color: var(--text-color);
 }
+
+.badge-em-breve {
+    font-size: 0.7rem;
+    background-color: #3e3e3e;
+    color: white;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-weight: normal;
+}
