@@ -1,6 +1,7 @@
 package com.melodium.backend.model;
 
 import jakarta.persistence.*;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "usuarios")
@@ -14,6 +15,9 @@ public class Usuario {
     private String email;
     private String senha_hash;
 
+    private Integer ofensiva = 0;
+    private LocalDate ultimaAtividade;
+
     public Usuario() {
     }
 
@@ -21,6 +25,7 @@ public class Usuario {
         this.nome = nome;
         this.email = email;
         this.senha_hash = senha_hash;
+        this.ofensiva = 0;
     }
 
     public Long getId_usuario() {
@@ -53,5 +58,21 @@ public class Usuario {
 
     public void setSenha_hash(String senha_hash) {
         this.senha_hash = senha_hash;
+    }
+
+    public Integer getOfensiva() {
+        return ofensiva != null ? ofensiva : 0;
+    }
+
+    public void setOfensiva(Integer ofensiva) {
+        this.ofensiva = ofensiva;
+    }
+
+    public LocalDate getUltimaAtividade() {
+        return ultimaAtividade;
+    }
+
+    public void setUltimaAtividade(LocalDate ultimaAtividade) {
+        this.ultimaAtividade = ultimaAtividade;
     }
 }
