@@ -17,6 +17,7 @@
   --hover-color: #C2E0BC;
   --beat-color: #C2E0BC;
   --beat-forte-color: #612B06;
+  
 
   --z-index-navbar: 2;
   --z-index-header-safe-area: 1;
@@ -326,3 +327,43 @@ main,
   }
 }
 
+.modal-em-breve-overlay {
+    display: none; 
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 9999; 
+    align-items: center;
+    justify-content: center;
+}
+
+
+.modal-em-breve-content {
+    background-color: #fcfcfc; 
+    padding: 30px;
+    border-radius: 12px;
+    text-align: center;
+    max-width: 400px;
+    width: 90%;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+}
+
+.btn-fechar-modal {
+    margin-top: 20px;
+    padding: 10px 25px;
+    background-color: #62745f;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.btn-fechar-modal:hover {
+    opacity: 0.8;
+}

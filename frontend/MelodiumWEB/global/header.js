@@ -104,3 +104,11 @@
   document.addEventListener('DOMContentLoaded', injectHeaderComponent);
 })();
 
+function abrirModalEmBreve() {
+    document.getElementById('modalEmBreve').style.display = 'flex';
+}
+
+function fecharModalEmBreve() {
+    document.getElementById('modalEmBreve').style.display = 'none';
+}
+

@@ -7,15 +7,15 @@
     </a>
 
     <nav class="nav-links-container">
-        <ul class="nav-links">
-            <li><a href="../about/about.html">Sobre o App</a></li>
-            <li><a href="#" onclick="alert('Funcionalidade em desenvolvimento para a próxima versão. Em breve!'); return false;">Rotinas Guiadas</a></li>
-            <li><a href="#" onclick="alert('Funcionalidade em desenvolvimento para a próxima versão. Em breve!'); return false;">Aba Social</a></li>
-            <li><a href="../tools/tools.html">Ferramentas</a></li>
-            <li><a href="../accessibility/accessibility.html">Acessibilidade</a></li>
-            <li><a href="../dashboard/dashboard.html">Painel Web</a></li>
-        </ul>
-    </nav>
+    <ul class="nav-links">
+        <li><a href="../about/about.html">Sobre o App</a></li>
+        <li><a href="#" onclick="abrirModalEmBreve(); return false;">Rotinas Guiadas</a></li>
+        <li><a href="#" onclick="abrirModalEmBreve(); return false;">Aba Social</a></li>
+        <li><a href="../tools/tools.html">Ferramentas</a></li>
+        <li><a href="../accessibility/accessibility.html">Acessibilidade</a></li>
+        <li><a href="../dashboard/dashboard.html">Painel Web</a></li>
+    </ul>
+</nav>
 
     <div class="nav-actions">
         <a href="../auth/auth.html?mode=login" class="btn-login">Entrar</a>
@@ -27,4 +27,12 @@
         <img src="../global/images/closeMenuButton.svg" alt="Fechar menu" class="closeMenuImage">
     </button>
 </header>
+
+<div id="modalEmBreve" class="modal-em-breve-overlay">
+    <div class="modal-em-breve-content border-main">
+        <h3 style="margin-top: 0; color: #333; ">Em Breve!</h3>
+        <p>Esta funcionalidade está em desenvolvimento e estará disponível na próxima bentotec do Melodium.</p>
+        <button onclick="fecharModalEmBreve()" class="btn-fechar-modal">Entendi</button>
+    </div>
+</div>
 
