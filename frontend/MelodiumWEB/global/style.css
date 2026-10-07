@@ -367,3 +367,9 @@ main,
 .btn-fechar-modal:hover {
     opacity: 0.8;
 }
+.nav-links a[href="#"] {
+    border-bottom: none !important;
+    text-decoration: none !important;
+    font-weight: 500 !important;
+    opacity: 80%;
+}
