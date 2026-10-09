@@ -24,8 +24,18 @@ public class UsuarioController {
     }
 
     @PostMapping
-    public Usuario criar(@RequestBody Usuario usuario) {
-        return usuarioRepository.save(usuario);
+    public ResponseEntity<?> criar(@RequestBody Usuario usuario) {
+        Optional<Usuario> existente = usuarioRepository.findByEmail(usuario.getEmail());
+        if(existente.isPresent()){
+             return ResponseEntity.badRequest().body("Usuário já existe");
+        }
+        
+        if (usuario.getSenha_hash() == null || usuario.getSenha_hash().isEmpty()) {
+            usuario.setSenha_hash("senha_visitante_padrao_2026");
+        }
+        
+        Usuario salvo = usuarioRepository.save(usuario);
+        return ResponseEntity.ok(salvo);
     }
 
     @PostMapping("/login")

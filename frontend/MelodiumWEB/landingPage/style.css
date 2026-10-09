@@ -38,14 +38,11 @@ body {
 }
 
 .icon-diamond {
-  position: absolute;
-  width: 1em;
-  height: 1em;
-  color: var(--accent-brown);
-  flex-shrink: 0;
-
-  top: 1.2rem;
-  left: 1.2rem;
+  width: 1.5rem;
+    height: 1.5rem;
+    position: relative;
+    color: var(--accent-brown);
+    flex-shrink: 0;
 }
 
 /* --- Navbar / Header --- */
@@ -245,9 +242,10 @@ body {
 }
 
 .stat-big {
-  font-size: clamp(2rem, 3.5vw, 3.5rem);
-  font-weight: 700;
-  line-height: 1;
+    font-size: clamp(2rem, 3vw, 2.8rem);
+    font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: 0.5rem;
 }
 
 .stat-label {
@@ -468,6 +466,8 @@ body {
 .image-container-circle {
   width: 8.5rem;
   height: 8.5rem;
+  aspect-ratio: 1 / 1;
+  flex-shrink: 0;
   border-radius: 50%;
   background-color: var(--accent-brown);
   color: var(--bg-card-green);
@@ -534,6 +534,9 @@ body {
 
 .hero-cta-group {
   display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: stretch;
   gap: 1rem;
   flex-wrap: wrap;
 }
@@ -570,6 +573,7 @@ body {
 .btn-primary,
 .btn-secondary {
   width: 100%;
+  display: flex;
   justify-content: space-between;
 }
 
@@ -593,10 +597,13 @@ body {
 }
 
 .card-stat-small {
-  padding: 1.2rem;
-  min-height: 8.5rem;
-  justify-content:center;
-  height: 100%;
+    padding: 1rem;
+    min-height: 8rem;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; 
+    gap: 0.8rem;
 }
 
 .badge-tag-sm {
@@ -611,64 +618,6 @@ body {
   border-radius: var(--radius-pill);
   font-size: 0.75rem;
   font-weight: 600;
-}
-
-/* --- Footer / Filtros de Instrumentos Atendidos --- */
-.catalog-section {
-  margin-top: 4rem;
-  border-top: var(--border-width) solid var(--border-color);
-  padding-top: 2rem;
-}
-
-.catalog-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1.5rem;
-  flex-wrap: wrap;
-  gap: 1rem;
-}
-
-.catalog-title {
-  font-size: clamp(2rem, 3.2vw, 3.2rem);
-  font-weight: 700;
-}
-
-.catalog-filters-trigger {
-  display: flex;
-  gap: 1.5rem;
-  font-weight: 600;
-  font-size: 0.95rem;
-}
-
-.tags-carousel {
-  display: flex;
-  gap: 0.75rem;
-  overflow-x: auto;
-  padding-bottom: 1rem;
-  scrollbar-width: none;
-}
-
-.tags-carousel::-webkit-scrollbar {
-  display: none;
-}
-
-.tag-pill {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  padding: 0.75rem 1.5rem;
-  border-radius: var(--radius-pill);
-  background-color: var(--bg-card-white);
-  white-space: nowrap;
-  font-weight: 600;
-  font-size: 0.95rem;
-  cursor: pointer;
-}
-
-.tag-pill.active {
-  background-color: var(--accent-brown);
-  color: var(--bg-card-green);
 }
 
 
@@ -837,4 +786,31 @@ a:-webkit-any-link {
     padding: 3px 8px;
     border-radius: 12px;
     font-weight: normal;
+}
+
+.teste-integracao-card {
+    background-color: #ffffff; 
+    padding: 32px; 
+    margin-top: 48px; 
+    margin-bottom: 40px; 
+    border-radius: 16px; 
+    
+    box-shadow: 0 10px 30px rgba(89, 53, 23, 0.08); 
+    
+    border: 1px solid rgba(89, 53, 23, 0.15); 
+}
+
+.teste-integracao-card h2 {
+    margin-top: 0;
+}
+
+.texto-teste-integracao {
+  font-size: 2.0rem;
+}
+
+.icone-painel {
+    width: 60%;
+    height: auto;
+    display: block; 
+    object-fit: contain; 
 }

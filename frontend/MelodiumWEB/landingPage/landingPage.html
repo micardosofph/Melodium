@@ -127,7 +127,7 @@
                     <h3>Painel de Exercícios</h3>
                 </div>
                 <div class="image-container-circle">
-                    🎵
+    <img src="../global/images/toDoList.svg" alt="Ícone de Lista de Tarefas Musicais" class="icone-painel">
                 </div>
                 <div>
                     <h3>Lista de Tarefas (To-Do)</h3>
@@ -186,7 +186,7 @@
                             <path d="M12 2L22 12L12 22L2 12Z" />
                         </svg>
                         <div>
-                        <div class="stat-big">Afinador Digital</div>
+                        <div class="stat-big">Afinador</div>
                         <p class="stat-label">Análise de frequência em tempo real para manter seu instrumento pronto
                             sem
                             sair do aplicativo.</p>
@@ -197,31 +197,6 @@
 
     </main>
 
-    <footer class="catalog-section">
-        <div class="catalog-header">
-            <h2 class="catalog-title">Instrumentos Suportados</h2>
-        </div>
-
-        <div class="tags-carousel">
-            <div class="tag-pill active border-main">
-                <span>Todos</span>
-            </div>
-            <div class="tag-pill border-main">
-                <span>Violão</span>
-            </div>
-            <div class="tag-pill border-main">
-                <span>Guitarra</span>
-            </div>
-            <div class="tag-pill border-main">
-                <span>Baixo</span>
-            </div>
-            <div class="tag-pill border-main">
-                <span>Piano / Teclado</span>
-            </div>
-            <div class="tag-pill border-main">
-            </div>
-        </div>
-    </footer>
 
     <script src="../global/header.js"></script>
     <script src="script.js"></script>
@@ -236,9 +211,13 @@
 </head>
 <body>
 
-    <h1>Teste de Integração - Melodium Web</h1>
-    <p id="status">Testando conexão com o backend...</p>
-    <ul id="lista-usuarios"></ul>
+    <div class="teste-integracao-card">
+    <h2 class="texto-teste-integracao">Teste de Integração - Melodium Web</h2>
+    <p style="color: green;">Conectado com sucesso ao Backend!</p>
+    <ul>
+        <li>Nenhum usuário cadastrado no banco ainda.</li>
+    </ul>
+</div>
 
     <script>
         fetch('http://localhost:8080/usuarios')

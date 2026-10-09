@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Melodium | Entrar ou Cadastrar</title>
+    <title>Melodium | Diário de Bordo</title>
     <link rel="stylesheet" href="../global/style.css" />
     <link rel="stylesheet" href="style.css" />
   </head>
@@ -15,45 +15,33 @@
     <main class="auth-shell">
       <section class="auth-card border-main" aria-labelledby="auth-title">
         <div class="auth-intro">
-          <p class="eyebrow">Bem-vindo ao Melodium</p>
-          <h1 id="auth-title">Acesse sua conta ou crie uma nova jornada.</h1>
-          <p class="auth-copy">Entre para continuar sua rotina ou cadastre-se para guardar seus caminhos musicais.</p>
+          <p class="eyebrow">Melodium TCC 2026</p>
+          <h1 id="auth-title">Cadastre-se e deixe seu nome marcado no Melodium.</h1>
+          <p class="auth-copy">Deixe o seu nome para testar a plataforma e simular a criação do seu perfil de estudante de música.</p>
         </div>
 
-        <div class="auth-switch" role="tablist" aria-label="Alternar entre login e cadastro">
-          <button class="auth-tab" data-mode="login" type="button">Entrar</button>
-          <button class="auth-tab" data-mode="signup" type="button">Cadastre-se</button>
-        </div>
-
-        <form class="auth-form" id="loginForm" novalidate>
-          <label for="userEmailInput">
-            E-mail
-            <input id="userEmailInput" name="email" type="email" placeholder="seu@email.com" required />
-          </label>
-          <label for="userPasswordInput">
-            Senha
-            <input id="userPasswordInput" name="password" type="password" placeholder="••••••••" required />
-          </label>
-          <button class="btn-signup border-main" type="submit">Entrar</button>
-        </form>
-
-        <form class="auth-form" id="signupForm" novalidate>
+        <form class="auth-form active" id="signupForm" novalidate style="display: grid;">
           <label for="userNameInput">
-            Nome
+            Nome ou Apelido
             <input id="userNameInput" name="name" type="text" placeholder="Seu nome" required />
           </label>
           <label for="signupEmailInput">
-            E-mail
-            <input id="signupEmailInput" name="email" type="email" placeholder="seu@email.com" required />
+            E-mail (Pode ser fictício)
+            <input id="signupEmailInput" name="email" type="email" placeholder="visitante@feira.com" required />
           </label>
-          <label for="signupPasswordInput">
-            Senha
-            <input id="signupPasswordInput" name="password" type="password" placeholder="Crie uma senha" required />
-          </label>
-          <button class="btn-signup border-main" type="submit">Criar conta</button>
+          
+          <button class="btn-signup border-main" type="submit">Iniciar Teste</button>
         </form>
       </section>
     </main>
+
+    <div id="modalSucesso" class="modal-em-breve-overlay">
+        <div class="modal-em-breve-content border-main">
+            <h3 style="margin-top: 0; color: #333;">Tudo pronto! </h3>
+            <p id="mensagemSucessoModal">Bem-vindo à demonstração!</p>
+            <button onclick="continuarParaSite()" class="btn-fechar-modal">Entrar no Site</button>
+        </div>
+    </div>
 
     <script src="../global/header.js"></script>
     <script src="auth.js"></script>
