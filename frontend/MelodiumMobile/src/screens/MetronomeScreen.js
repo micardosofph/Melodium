@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Vibration, Modal } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Vibration, Modal, ScrollView } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createAudioPlayer, preload, setAudioModeAsync } from 'expo-audio';
 
@@ -337,7 +338,8 @@ export default function MetronomoScreen() {
     ));
 
     return (
-        <View style={styles.container}>
+        <SafeAreaView style={styles.screen} edges={['top', 'bottom', 'left', 'right']}>
+        <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
             <View style={styles.topRow}>
                 <View>
                     <Text style={styles.eyebrow}>PRÁTICA GUIADA</Text>
@@ -473,12 +475,18 @@ export default function MetronomoScreen() {
             <Text style={styles.tip}>
                 {isPlaying ? 'clique no pulso e encontre seu tempo' : 'pronto para começar uma nova sessão?'}
             </Text>
-        </View>
+            <View style={styles.latencyNotice}>
+                <Text style={styles.latencyTitle}>AVISO DESTA VERSÃO</Text>
+                <Text style={styles.latencyText}>Por ser uma versão de demonstração feita com Expo, alguns aparelhos podem apresentar um pequeno atraso no clique do metrônomo.</Text>
+            </View>
+        </ScrollView>
+        </SafeAreaView>
     );
 }
 
 const styles = StyleSheet.create({
-    container: { flex: 1, padding: 24, backgroundColor: '#F7F9F4' },
+    screen: { flex: 1, backgroundColor: '#F7F9F4' },
+    container: { flexGrow: 1, padding: 24, paddingBottom: 30 },
     topRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginTop: 24, marginBottom: 30 },
     eyebrow: { color: '#8A6B56', fontSize: 11, fontWeight: 'bold', letterSpacing: 1.4 },
     title: { color: '#46240C', fontSize: 32, fontWeight: 'bold', marginTop: 8 },
@@ -670,5 +678,8 @@ const styles = StyleSheet.create({
     },
     soundText: { color: '#46240C', fontSize: 12, fontWeight: '700' },
     soundTextActive: { color: '#46240C' },
-    tip: { textAlign: 'center', color: '#8A6B56', marginTop: 24, fontSize: 14 }
+    tip: { textAlign: 'center', color: '#8A6B56', marginTop: 20, fontSize: 14 },
+    latencyNotice: { marginTop: 16, padding: 13, borderRadius: 12, backgroundColor: '#E9EFE4', borderWidth: 1, borderColor: '#C2D5B6' },
+    latencyTitle: { color: '#46240C', fontSize: 9, fontWeight: '800', letterSpacing: 1 },
+    latencyText: { color: '#8A6B56', fontSize: 11, lineHeight: 16, marginTop: 5 }
 });

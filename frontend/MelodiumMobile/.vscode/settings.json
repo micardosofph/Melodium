@@ -1,0 +1,13 @@
+{
+    "java.jdt.ls.vmargs": "-XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -Dsun.zip.disableMemoryMapping=true -Xmx1G -Xms100m -Xlog:disable",
+    "java.server.launchMode": "LightWeight",
+    "files.watcherExclude": {
+        "**/android/.gradle/**": true,
+        "**/android/.cxx/**": true,
+        "**/android/build/**": true,
+        "**/android/app/.cxx/**": true,
+        "**/android/app/build/**": true,
+        "**/.expo-export-test/**": true,
+        "**/dist/**": true
+    }
+}

@@ -1,9 +1,10 @@
 {
   "expo": {
-    "name": "MelodiumMobile",
+    "name": "Melodium",
     "slug": "MelodiumMobile",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "orientation": "portrait",
+    "backgroundColor": "#F7F9F4",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "ios": {
@@ -13,14 +14,16 @@
       }
     },
     "android": {
+      "backgroundColor": "#F7F9F4",
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
+        "backgroundColor": "#C2D5B6",
         "foregroundImage": "./assets/android-icon-foreground.png",
-        "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
       "package": "com.melodium.mobile",
       "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.READ_MEDIA_VIDEO",
         "android.permission.RECORD_AUDIO"
       ]
     },
@@ -33,7 +36,57 @@
       }
     },
     "plugins": [
-      "expo-audio"
+      [
+        "expo-status-bar",
+        {
+          "hidden": false,
+          "style": "dark"
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Permita que o Melodium acesse suas fotos para escolher uma imagem de perfil."
+        }
+      ],
+      [
+        "expo-notifications",
+        {
+          "color": "#C2D5B6",
+          "defaultChannel": "daily-practice"
+        }
+      ],
+      "expo-audio",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Permita que o Melodium use a câmera para gravar sua evolução.",
+          "microphonePermission": "Permita que o Melodium use o microfone para gravar o áudio do seu instrumento.",
+          "recordAudioAndroid": true,
+          "barcodeScannerEnabled": false
+        }
+      ],
+      [
+        "expo-media-library",
+        {
+          "photosPermission": "Permita que o Melodium acesse seus vídeos de prática.",
+          "savePhotosPermission": "Permita que o Melodium salve vídeos na galeria do aparelho.",
+          "granularPermissions": [
+            "video"
+          ]
+        }
+      ],
+      "expo-video",
+      "expo-asset",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#C2D5B6",
+          "image": "./assets/android-icon-foreground.png",
+          "imageWidth": 160,
+          "resizeMode": "contain"
+        }
+      ]
     ]
   }
 }

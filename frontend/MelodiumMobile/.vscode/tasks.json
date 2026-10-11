@@ -1,0 +1,49 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Rebuild Android native app",
+			"type": "shell",
+			"command": ".\\android\\gradlew.bat",
+			"args": [
+				":app:assembleDebug"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Rebuild Android native app from android",
+			"type": "shell",
+			"command": ".\\android\\gradlew.bat",
+			"args": [
+				"-p",
+				"android",
+				":app:assembleDebug"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Rebuild Android debug with local SDK",
+			"type": "shell",
+			"command": "powershell.exe",
+			"args": [
+				"-NoProfile",
+				"-Command",
+				"$env:ANDROID_HOME='C:\\Users\\migmig\\AppData\\Local\\Android\\Sdk'; $env:ANDROID_SDK_ROOT=$env:ANDROID_HOME; & '.\\android\\gradlew.bat' -p android :app:assembleDebug"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Check Android devices",
+			"type": "shell",
+			"command": "C:\\Users\\migmig\\AppData\\Local\\Android\\Sdk\\platform-tools\\adb.exe",
+			"args": [
+				"devices"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		}
+	]
+}

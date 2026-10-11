@@ -1,222 +1,212 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, ScrollView, Modal, Pressable } from 'react-native';
-import ComingSoonPopup from '../components/ComingSoonPopup';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { Animated, BackHandler, PanResponder, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useFocusEffect } from '@react-navigation/native';
+import { AppTabs, colors, Eyebrow, FlowButton } from '../components/FlowUI';
+import HomeTour, { tourSteps } from '../components/HomeTour';
+import MusicToolIcon from '../components/MusicToolIcon';
+import ProfileAvatar from '../components/ProfileAvatar';
+import { localData, useLocalData } from '../services/localData';
+import { formatDuration, practiceStats } from '../services/practiceModel';
+
+const homeGreetings = ['Hoje tem música.', 'Seu som começa aqui.', 'Vamos tirar uma nota do papel?', 'Um pouco de música muda o dia.', 'Seu próximo acorde te espera.'];
 
 export default function HomeScreen({ navigation }) {
-    const [isDrawerVisible, setIsDrawerVisible] = useState(false);
-    const [isComingSoonVisible, setIsComingSoonVisible] = useState(false);
-
-    const closeDrawer = () => setIsDrawerVisible(false);
-    const openComingSoon = () => {
-        closeDrawer();
-        setIsComingSoonVisible(true);
+    const { ready, error, data } = useLocalData();
+    const stats = practiceStats(data.sessions);
+    const [drawer, setDrawer] = useState(false);
+    const [greeting, setGreeting] = useState(homeGreetings[0]);
+    const [tour, setTour] = useState(null);
+    const [rect, setRect] = useState(null);
+    const [size, setSize] = useState({ width: 0, height: 0 });
+    const root = useRef(null);
+    const scroll = useRef(null);
+    const targets = useRef({});
+    const positions = useRef({});
+    const autoTour = useRef(false);
+    const drawerY = useRef(new Animated.Value(0)).current;
+    const drawerOpen = useRef(false);
+    const drawerClosing = useRef(false);
+    const closeDrawer = useCallback(() => {
+        if (!drawerOpen.current || drawerClosing.current) return;
+        drawerClosing.current = true;
+        drawerY.stopAnimation();
+        Animated.timing(drawerY, { toValue: 520, duration: 190, useNativeDriver: true }).start(() => {
+            drawerOpen.current = false;
+            drawerClosing.current = false;
+            setDrawer(false);
+            drawerY.setValue(0);
+        });
+    }, [drawerY]);
+    const openDrawer = () => {
+        if (drawerOpen.current) return;
+        drawerOpen.current = true;
+        drawerClosing.current = false;
+        drawerY.setValue(520);
+        setDrawer(true);
+        requestAnimationFrame(() => Animated.spring(drawerY, { toValue: 0, damping: 23, stiffness: 240, mass: 0.8, useNativeDriver: true }).start());
     };
-    const startPractice = () => {
-        closeDrawer();
-        navigation.navigate('Pratica');
+    const drawerPan = useRef(PanResponder.create({
+        onStartShouldSetPanResponder: () => false,
+        onMoveShouldSetPanResponder: (_, gesture) => gesture.dy > 6 && Math.abs(gesture.dy) > Math.abs(gesture.dx),
+        onMoveShouldSetPanResponderCapture: (_, gesture) => gesture.dy > 6 && Math.abs(gesture.dy) > Math.abs(gesture.dx),
+        onPanResponderMove: (_, gesture) => drawerY.setValue(Math.max(0, gesture.dy)),
+        onPanResponderRelease: (_, gesture) => {
+            if (gesture.dy > 85 || gesture.vy > 0.8) closeDrawer();
+            else Animated.spring(drawerY, { toValue: 0, damping: 22, stiffness: 240, useNativeDriver: true }).start();
+        },
+        onPanResponderTerminate: () => Animated.spring(drawerY, { toValue: 0, useNativeDriver: true }).start(),
+        onPanResponderTerminationRequest: () => false,
+    })).current;
+    useFocusEffect(useCallback(() => {
+        setGreeting((current) => {
+            const alternatives = homeGreetings.filter((item) => item !== current);
+            return alternatives[Math.floor(Math.random() * alternatives.length)];
+        });
+    }, []));
+    useEffect(() => {
+        if (!drawer) return undefined;
+        const back = BackHandler.addEventListener('hardwareBackPress', () => { closeDrawer(); return true; });
+        return () => back.remove();
+    }, [drawer, closeDrawer]);
+    const closeTour = useCallback(() => {
+        setTour(null);
+        setRect(null);
+        scroll.current?.scrollTo({ y: 0, animated: false });
+        localData.finishTour().catch(() => {});
+    }, []);
+    useEffect(() => {
+        if (ready && !data.tourSeen && !autoTour.current) { autoTour.current = true; setTour(0); }
+    }, [ready, data.tourSeen]);
+    useEffect(() => {
+        if (tour === null) return undefined;
+        const back = BackHandler.addEventListener('hardwareBackPress', () => { closeTour(); return true; });
+        return () => back.remove();
+    }, [tour, closeTour]);
+    useEffect(() => {
+        setRect(null);
+        if (tour === null || tour >= tourSteps.length) return undefined;
+        const key = tourSteps[tour].key;
+        let measureTimer;
+        let cancelled = false;
+        const timer = setTimeout(() => {
+            scroll.current?.scrollTo({ y: Math.max(0, (positions.current[key] || 0) - 55), animated: false });
+            // Android applies the scroll on the native thread before measurements settle.
+            measureTimer = setTimeout(() => {
+                root.current?.measureInWindow((rootX, rootY) => {
+                    targets.current[key]?.measureInWindow((x, y, width, height) => {
+                        if (!cancelled) setRect({ x: x - rootX, y: y - rootY, width, height });
+                    });
+                });
+            }, 120);
+        }, 180);
+        return () => { cancelled = true; clearTimeout(timer); clearTimeout(measureTimer); };
+    }, [tour, size.width, size.height]);
+    const target = (key) => ({
+        ref: (node) => { targets.current[key] = node; },
+        collapsable: false,
+        onLayout: (event) => { positions.current[key] = event.nativeEvent.layout.y; },
+    });
+    const open = (screen) => {
+        if (drawerOpen.current) {
+            drawerOpen.current = false;
+            drawerClosing.current = false;
+            drawerY.stopAnimation();
+            drawerY.setValue(0);
+            setDrawer(false);
+        }
+        navigation.navigate(screen);
     };
-
     return (
-        <SafeAreaView style={styles.container}>
-            <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
-                <View style={styles.headerRow}>
-                    <View>
-                        <Text style={styles.eyebrow}>BOM DIA, MÚSICO</Text>
-                        <Text style={styles.title}>Área de prática</Text>
-                        <Text style={styles.subtitle}>mantenha o ritmo</Text>
+        <SafeAreaView ref={root} collapsable={false} style={styles.screen} edges={['top', 'left', 'right', 'bottom']} onLayout={(event) => setSize(event.nativeEvent.layout)}>
+            <View style={styles.main} importantForAccessibility={tour !== null ? 'no-hide-descendants' : 'auto'}>
+                <ScrollView ref={scroll} scrollEnabled={tour === null} showsVerticalScrollIndicator={false} contentContainerStyle={[styles.content, tour !== null && { paddingBottom: size.height * 0.65 }]}>
+                    <View style={styles.header}>
+                        <View style={styles.headerCopy}><Eyebrow>SEU ESTÚDIO DE BOLSO</Eyebrow><Text style={styles.title}>{greeting}</Text><Text style={styles.subtitle}>Pratique. Grave. Perceba a diferença.</Text></View>
+                        <Pressable accessibilityRole="button" accessibilityLabel="Abrir perfil" onPress={() => open('User')}><ProfileAvatar uri={data.profilePhotoUri} size={44} /></Pressable>
                     </View>
-                    <TouchableOpacity style={styles.profileButton} onPress={openComingSoon}>
-                        <Text style={styles.profileText}>US</Text>
-                    </TouchableOpacity>
-                </View>
-
-                <View style={styles.row}>
-                    <View style={styles.cardInfo}>
-                        <Text style={styles.cardHeader}>⏱ tempo total de prática</Text>
-                        <Text style={styles.cardNumber}>0</Text>
-                        <Text style={styles.cardFooter}>minutos</Text>
+                    {error && <View style={styles.notice}><Text style={styles.noticeText}>{error}</Text>{!ready && <FlowButton onPress={() => localData.load().catch(() => {})}>Tentar novamente</FlowButton>}</View>}
+                    <View {...target('practice')} style={styles.practiceHero}>
+                        <View style={styles.heroHeading}><Text style={styles.heroEyebrow}>SEU PRÓXIMO PASSO</Text><Text style={styles.heroNote}>♬</Text></View>
+                        <Text style={styles.heroTitle}>{data.active ? 'Sua prática está aqui.' : 'Dê tempo à sua música.'}</Text>
+                        <Text style={styles.heroCopy}>{data.active ? 'Retome o cronômetro e salve mais um capítulo.' : 'Comece uma sessão e transforme cada minuto em evolução.'}</Text>
+                        <FlowButton variant="secondary" style={styles.heroButton} disabled={!ready} onPress={() => open('Practice')}>{data.active ? 'Retomar prática  →' : 'Começar prática  →'}</FlowButton>
+                        <Pressable accessibilityRole="button" disabled={!ready} onPress={() => open('AddPractice')} style={styles.manualLink}><Text style={styles.manualText}>Já pratiquei · adicionar ao histórico</Text></Pressable>
                     </View>
-
-                    <TouchableOpacity style={styles.cardInfo} onPress={openComingSoon}>
-                        <Text style={styles.cardHeader}>✦ ofensiva atual</Text>
-                        <Text style={styles.cardNumber}>3</Text>
-                        <Text style={styles.cardFooter}>dias seguidos</Text>
-                    </TouchableOpacity>
-                </View>
-
-                <Text style={styles.sectionTitle}>ações rápidas</Text>
-
-                <TouchableOpacity
-                    style={styles.btnGreen}
-                    onPress={() => navigation.navigate('Metronome')}
-                >
-                    <View>
-                        <Text style={styles.btnGreenTitle}>Metrônomo</Text>
-                        <Text style={styles.btnGreenSub}>pratique a precisão</Text>
+                    <View style={styles.stats}>
+                        <View style={styles.stat}><Text style={styles.statValue}>{ready ? formatDuration(stats.totalSeconds) : '—'}</Text><Text style={styles.statLabel}>de música registrada</Text></View>
+                        <View style={styles.statDivider} />
+                        <View style={styles.stat}><Text style={styles.statValue}>{ready ? stats.count : '—'}</Text><Text style={styles.statLabel}>práticas salvas</Text></View>
+                        <View style={styles.statDivider} />
+                        <View style={styles.stat}><Text style={styles.statValue}>{ready ? stats.streak : '—'}</Text><Text style={styles.statLabel}>dias seguidos</Text></View>
                     </View>
-                    <Text style={styles.iconSimbol}>⏱</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                    style={styles.btnBrown}
-                    onPress={() => navigation.navigate('Tuner')}
-                >
-                    <View>
-                        <Text style={styles.btnBrownTitle}>Afinar instrumento</Text>
-                        <Text style={styles.btnBrownSub}>deixe cada nota no lugar</Text>
+                    <Text style={styles.sectionTitle}>Sua evolução merece ser ouvida</Text>
+                    <View {...target('record')} style={styles.recordWrap}>
+                        <Pressable accessibilityRole="button" onPress={() => open('RecordVideo')} style={styles.recordCard}>
+                            <View style={styles.recordIcon}><Text style={styles.recordGlyph}>●</Text></View>
+                            <View style={styles.actionCopy}><Text style={styles.cardTitle}>Gravar minha prática</Text><Text style={styles.cardCopy}>Um trecho de hoje. Uma descoberta amanhã.</Text></View>
+                            <Text style={styles.arrow}>↗</Text>
+                        </Pressable>
                     </View>
-                    <Text style={styles.iconSimbolLight}>⌁</Text>
-                </TouchableOpacity>
-
-                <Text style={styles.sectionTitle}>aprenda e acompanhe</Text>
-                <View style={styles.discoverRow}>
-                    <TouchableOpacity style={styles.smallCard} onPress={openComingSoon}>
-                        <Text style={styles.smallIcon}>✦</Text>
-                        <Text style={styles.smallTitle}>Trilhas</Text>
-                        <Text style={styles.smallSub}>aprenda por etapas</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.smallCard} onPress={openComingSoon}>
-                        <Text style={styles.smallIcon}>♪</Text>
-                        <Text style={styles.smallTitle}>Conceitos</Text>
-                        <Text style={styles.smallSub}>consulte fundamentos</Text>
-                    </TouchableOpacity>
-                </View>
-                <View style={styles.discoverRow}>
-                    <TouchableOpacity style={styles.smallCard} onPress={openComingSoon}>
-                        <Text style={styles.smallIcon}>↗</Text>
-                        <Text style={styles.smallTitle}>Progresso</Text>
-                        <Text style={styles.smallSub}>acompanhe seu caminho</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.smallCard} onPress={openComingSoon}>
-                        <Text style={styles.smallIcon}>?</Text>
-                        <Text style={styles.smallTitle}>Guia Melodium</Text>
-                        <Text style={styles.smallSub}>entenda o aplicativo</Text>
-                    </TouchableOpacity>
-                </View>
-            </ScrollView>
-
-            <View style={styles.bottomBar}>
-                <TouchableOpacity style={styles.tab} onPress={() => { }}>
-                    <Text style={styles.tabTextActive}>Home</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.tabMain} onPress={() => setIsDrawerVisible(true)} accessibilityLabel="Abrir gaveta de ações">
-                    <Text style={styles.tabMainText}>+</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.tab} onPress={openComingSoon}>
-                    <Text style={styles.tabText}>Social</Text>
-                </TouchableOpacity>
+                    <View {...target('evolution')}>
+                        <Pressable accessibilityRole="button" onPress={() => open('EvolutionGallery')} style={styles.galleryCard}>
+                            <View style={styles.galleryIcon}><Text style={styles.play}>▶</Text></View>
+                            <View style={styles.actionCopy}><Text style={styles.cardTitle}>Minha galeria de evolução</Text><Text style={styles.cardCopy}>Reveja, compare e reconheça seu caminho.</Text></View>
+                            <Text style={styles.arrow}>›</Text>
+                        </Pressable>
+                    </View>
+                    <Text style={styles.sectionTitle}>Antes da próxima nota</Text>
+                    <View {...target('tools')} style={styles.row}>
+                        <Pressable accessibilityRole="button" style={styles.tool} onPress={() => open('Metronome')}><MusicToolIcon type="metronome" /><Text style={styles.cardTitle}>Metrônomo</Text><Text style={styles.cardCopy}>Encontre a pulsação</Text></Pressable>
+                        <Pressable accessibilityRole="button" style={styles.tool} onPress={() => open('Tuner')}><MusicToolIcon type="tuner" /><Text style={styles.cardTitle}>Afinador</Text><Text style={styles.cardCopy}>Cada nota no lugar</Text></Pressable>
+                    </View>
+                    <Text style={styles.sectionTitle}>Acompanhe seu caminho</Text>
+                    <View {...target('progress')} style={styles.row}>
+                        <Pressable accessibilityRole="button" style={styles.smallCard} onPress={() => open('Progress')}><Text style={styles.smallIcon}>↗</Text><Text style={styles.cardTitle}>Progresso</Text><Text style={styles.cardCopy}>Seu tempo, suas conquistas</Text></Pressable>
+                        <Pressable accessibilityRole="button" style={styles.smallCard} onPress={() => setTour(0)}><Text style={styles.smallIcon}>?</Text><Text style={styles.cardTitle}>Guia Melodium</Text><Text style={styles.cardCopy}>Vamos conhecer o app?</Text></Pressable>
+                    </View>
+                    <View style={styles.row}>
+                        {[['Trilhas', 'Aprenda por etapas'], ['Conceitos', 'Explore os fundamentos']].map(([title, copy]) => <View key={title} style={[styles.smallCard, styles.unavailable]} accessibilityState={{ disabled: true }}><Text style={styles.soon}>EM BREVE</Text><Text style={styles.cardTitle}>{title}</Text><Text style={styles.cardCopy}>{copy}</Text></View>)}
+                    </View>
+                </ScrollView>
+                <AppTabs navigation={navigation} active="Home" onAdd={openDrawer} />
             </View>
-
-            <ComingSoonPopup visible={isComingSoonVisible} onClose={() => setIsComingSoonVisible(false)} />
-
-            <Modal visible={isDrawerVisible} transparent animationType="slide" onRequestClose={closeDrawer}>
-                <View style={styles.modalRoot}>
-                    <Pressable style={styles.modalBackdrop} onPress={closeDrawer} />
-                    <View style={styles.drawer}>
-                        <View style={styles.drawerHandle} />
-                        <View style={styles.drawerHeader}>
-                            <View>
-                                <Text style={styles.drawerEyebrow}>NOVA ATIVIDADE</Text>
-                                <Text style={styles.drawerTitle}>O que você quer fazer?</Text>
-                            </View>
-                            <TouchableOpacity style={styles.closeButton} onPress={closeDrawer} accessibilityLabel="Fechar gaveta">
-                                <Text style={styles.closeButtonText}>×</Text>
-                            </TouchableOpacity>
-                        </View>
-
-                        <TouchableOpacity style={styles.drawerActionPrimary} onPress={startPractice}>
-                            <View style={styles.drawerIconPrimary}><Text style={styles.drawerIconText}>♩</Text></View>
-                            <View style={styles.drawerActionCopy}>
-                                <Text style={styles.drawerActionTitle}>Começar uma prática</Text>
-                                <Text style={styles.drawerActionSub}>use o metrônomo e registre seu tempo</Text>
-                            </View>
-                            <Text style={styles.drawerArrow}>›</Text>
-                        </TouchableOpacity>
-
-                        <TouchableOpacity style={styles.drawerAction} onPress={openComingSoon}>
-                            <View style={styles.drawerIcon}><Text style={styles.drawerIconText}>＋</Text></View>
-                            <View style={styles.drawerActionCopy}>
-                                <Text style={styles.drawerActionTitle}>Nova atividade</Text>
-                                <Text style={styles.drawerActionSub}>registre uma sessão que já aconteceu</Text>
-                            </View>
-                            <Text style={styles.drawerArrow}>›</Text>
-                        </TouchableOpacity>
-
-                        <TouchableOpacity style={styles.drawerAction} onPress={openComingSoon}>
-                            <View style={styles.drawerIcon}><Text style={styles.drawerIconText}>▣</Text></View>
-                            <View style={styles.drawerActionCopy}>
-                                <Text style={styles.drawerActionTitle}>Gravar vídeo</Text>
-                                <Text style={styles.drawerActionSub}>registre sua evolução tocando</Text>
-                            </View>
-                            <Text style={styles.drawerArrow}>›</Text>
-                        </TouchableOpacity>
-                    </View>
-                </View>
-            </Modal>
+            {drawer && <Pressable style={styles.drawerOverlay} onPress={closeDrawer} accessibilityRole="button" accessibilityLabel="Fechar ações">
+                <Animated.View {...drawerPan.panHandlers} style={[styles.drawer, { transform: [{ translateY: drawerY }] }]}>
+                    <Pressable onPress={(event) => event.stopPropagation()} style={styles.drawerSurface}>
+                        <View style={styles.dragHandle} accessibilityElementsHidden />
+                        <View style={styles.drawerHeader}><Text style={styles.sectionTitle}>Mais música, do seu jeito</Text><Pressable onPress={closeDrawer} accessibilityLabel="Fechar" style={styles.close}><Text style={styles.arrow}>×</Text></Pressable></View>
+                        <FlowButton onPress={() => open('Practice')}>Começar uma prática</FlowButton>
+                        <FlowButton variant="secondary" onPress={() => open('AddPractice')}>Registrar uma prática anterior</FlowButton>
+                        <FlowButton variant="secondary" onPress={() => open('RecordVideo')}>Gravar vídeo</FlowButton>
+                    </Pressable>
+                </Animated.View>
+            </Pressable>}
+            {tour !== null && <HomeTour step={tour} rect={rect} size={size} onNext={() => setTour((current) => current + 1)} onSkip={closeTour} onSupport={() => { closeTour(); navigation.navigate('Support'); }} />}
         </SafeAreaView>
     );
 }
-
 const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: '#F7F9F4' },
-    content: { paddingHorizontal: 24, paddingTop: 20, paddingBottom: 44 },
-    headerRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginTop: 20 },
-    eyebrow: { color: '#8A6B56', fontSize: 11, fontWeight: 'bold', letterSpacing: 1.4, marginBottom: 8 },
-    title: { fontSize: 32, fontWeight: 'bold', color: '#46240C', marginTop: 20 },
-    subtitle: { fontSize: 18, color: '#8A6B56', marginBottom: 20 },
-    profileButton: { width: 46, height: 46, borderRadius: 23, backgroundColor: '#C2D5B6', justifyContent: 'center', alignItems: 'center', borderWidth: 1, borderColor: '#46240C' },
-    profileText: { color: '#46240C', fontWeight: 'bold' },
-    row: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 20 },
-    cardInfo: {
-        width: '48%', backgroundColor: '#FFFFFF', borderColor: '#46240C',
-        borderWidth: 1, borderRadius: 16, padding: 16
-    },
-    cardHeader: { color: '#8A6B56', fontSize: 12, marginBottom: 20 },
-    cardNumber: { color: '#46240C', fontSize: 32, fontWeight: 'bold', marginBottom: 10 },
-    cardFooter: { color: '#8A6B56', fontSize: 12 },
-    sectionTitle: { fontSize: 18, color: '#46240C', textAlign: 'center', marginVertical: 20 },
-    btnGreen: {
-        backgroundColor: '#C2D5B6', borderRadius: 16, padding: 20,
-        flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16,
-        borderWidth: 1, borderColor: '#46240C'
-    },
-    btnGreenTitle: { fontSize: 20, fontWeight: 'bold', color: '#46240C' },
-    btnGreenSub: { fontSize: 16, color: '#46240C', opacity: 0.8 },
-    btnBrown: {
-        backgroundColor: '#46240C', borderRadius: 16, padding: 20,
-        flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'
-    },
-    btnBrownTitle: { fontSize: 20, fontWeight: 'bold', color: '#FFFFFF' },
-    btnBrownSub: { fontSize: 16, color: '#E0E0E0' },
-    iconSimbol: { fontSize: 24, color: '#46240C' },
-    iconSimbolLight: { fontSize: 24, color: '#FFFFFF' },
-    discoverRow: { flexDirection: 'row', justifyContent: 'space-between' },
-    smallCard: { width: '48%', backgroundColor: '#E9EFE4', borderRadius: 16, padding: 16, borderWidth: 1, borderColor: '#C2D5B6', marginBottom: 12 },
-    smallIcon: { color: '#46240C', fontSize: 26, marginBottom: 12 },
-    smallTitle: { color: '#46240C', fontSize: 15, fontWeight: 'bold' },
-    smallSub: { color: '#8A6B56', fontSize: 12, marginTop: 4 },
-    bottomBar: { flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', paddingHorizontal: 24, paddingTop: 12, paddingBottom: 16, backgroundColor: '#FFFFFF', borderTopWidth: 1, borderTopColor: '#E9EFE4' },
-    tab: { alignItems: 'center' },
-    tabTextActive: { color: '#46240C', fontWeight: 'bold' },
-    tabText: { color: '#A0D0A0' },
-    tabMain: { backgroundColor: '#46240C', width: 58, height: 58, borderRadius: 29, justifyContent: 'center', alignItems: 'center', marginTop: -28, borderWidth: 4, borderColor: '#F7F9F4' },
-    tabMainText: { color: '#FFF', fontSize: 30, lineHeight: 32 },
-    modalRoot: { flex: 1, justifyContent: 'flex-end' },
-    modalBackdrop: { ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(35, 22, 14, 0.42)' },
-    drawer: { backgroundColor: '#F7F9F4', borderTopLeftRadius: 28, borderTopRightRadius: 28, paddingHorizontal: 24, paddingTop: 12, paddingBottom: 30 },
-    drawerHandle: { width: 42, height: 5, borderRadius: 3, backgroundColor: '#C2D5B6', alignSelf: 'center', marginBottom: 22 },
-    drawerHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20 },
-    drawerEyebrow: { color: '#8A6B56', fontSize: 10, fontWeight: 'bold', letterSpacing: 1.4, marginBottom: 7 },
-    drawerTitle: { color: '#46240C', fontSize: 23, fontWeight: 'bold' },
-    closeButton: { width: 34, height: 34, borderRadius: 17, backgroundColor: '#E9EFE4', alignItems: 'center', justifyContent: 'center' },
-    closeButtonText: { color: '#46240C', fontSize: 25, lineHeight: 28 },
-    drawerAction: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#FFFFFF', borderWidth: 1, borderColor: '#D8E2D0', borderRadius: 16, padding: 14, marginBottom: 10 },
-    drawerActionPrimary: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#C2D5B6', borderWidth: 1, borderColor: '#46240C', borderRadius: 16, padding: 14, marginBottom: 10 },
-    drawerIcon: { width: 42, height: 42, borderRadius: 13, backgroundColor: '#E9EFE4', alignItems: 'center', justifyContent: 'center' },
-    drawerIconPrimary: { width: 42, height: 42, borderRadius: 13, backgroundColor: '#F7F9F4', alignItems: 'center', justifyContent: 'center' },
-    drawerIconText: { color: '#46240C', fontSize: 24 },
-    drawerActionCopy: { flex: 1, marginLeft: 13 },
-    drawerActionTitle: { color: '#46240C', fontSize: 15, fontWeight: 'bold' },
-    drawerActionSub: { color: '#8A6B56', fontSize: 12, marginTop: 4 },
-    drawerArrow: { color: '#8A6B56', fontSize: 27, marginLeft: 8 }
+    screen: { flex: 1, backgroundColor: colors.background }, main: { flex: 1 }, content: { padding: 22, paddingBottom: 30 },
+    header: { flexDirection: 'row', alignItems: 'center', gap: 12, marginBottom: 24 }, headerCopy: { flex: 1 }, title: { color: colors.brown, fontSize: 29, lineHeight: 35, fontWeight: '800' }, subtitle: { color: colors.muted, fontSize: 12, marginTop: 7 },
+    practiceHero: { backgroundColor: colors.brown, borderRadius: 24, padding: 22 }, heroHeading: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+    heroEyebrow: { color: colors.green, fontSize: 10, fontWeight: '700', letterSpacing: 1.1 }, heroNote: { fontSize: 30, color: colors.green },
+    heroTitle: { fontSize: 28, lineHeight: 34, color: colors.white, fontWeight: '700', marginTop: 7 }, heroCopy: { color: '#E5DCD4', fontSize: 13, lineHeight: 20, marginTop: 10, marginBottom: 18 },
+    heroButton: { backgroundColor: colors.green }, manualLink: { minHeight: 42, alignItems: 'center', justifyContent: 'center', marginTop: 5 }, manualText: { color: '#E5DCD4', fontSize: 11 },
+    stats: { flexDirection: 'row', alignItems: 'center', paddingVertical: 22 }, stat: { flex: 1, alignItems: 'center' }, statValue: { color: colors.brown, fontSize: 19, fontWeight: '800' }, statLabel: { color: colors.muted, fontSize: 9, marginTop: 5, textAlign: 'center' }, statDivider: { height: 28, width: 1, backgroundColor: colors.border },
+    sectionTitle: { color: colors.brown, fontSize: 18, lineHeight: 24, fontWeight: '700', marginTop: 14, marginBottom: 14 },
+    recordWrap: { marginBottom: 10 }, recordCard: { flexDirection: 'row', alignItems: 'center', gap: 13, padding: 18, backgroundColor: colors.green, borderRadius: 20 },
+    recordIcon: { width: 42, height: 42, borderWidth: 1.5, borderColor: colors.brown, borderRadius: 14, alignItems: 'center', justifyContent: 'center' }, recordGlyph: { color: colors.brown, fontSize: 24 },
+    actionCopy: { flex: 1 }, cardTitle: { fontSize: 15, lineHeight: 20, color: colors.brown, fontWeight: '700', marginTop: 7 }, cardCopy: { color: colors.muted, fontSize: 11, lineHeight: 17, marginTop: 5 },
+    arrow: { fontSize: 26, color: colors.brown }, galleryCard: { flexDirection: 'row', alignItems: 'center', gap: 13, padding: 18, backgroundColor: colors.white, borderWidth: 1, borderColor: colors.border, borderRadius: 20, marginBottom: 10 },
+    galleryIcon: { width: 42, height: 42, borderRadius: 21, backgroundColor: colors.paleGreen, alignItems: 'center', justifyContent: 'center' }, play: { color: colors.brown, fontSize: 15 },
+    row: { flexDirection: 'row', gap: 12, marginBottom: 12 }, tool: { flex: 1, padding: 18, backgroundColor: colors.paleGreen, borderRadius: 18 },
+    smallCard: { flex: 1, padding: 16, borderWidth: 1, borderColor: colors.border, borderRadius: 18, backgroundColor: colors.white }, smallIcon: { color: colors.brown, fontSize: 25 },
+    unavailable: { opacity: 0.45 }, soon: { color: colors.muted, fontSize: 9, fontWeight: '700', letterSpacing: 1 },
+    notice: { backgroundColor: '#F7E1D6', padding: 12, borderRadius: 12, marginBottom: 14 }, noticeText: { color: colors.brown, fontSize: 12 },
+    drawerOverlay: { position: 'absolute', top: 0, right: 0, bottom: 0, left: 0, width: '100%', height: '100%', zIndex: 30, elevation: 30, justifyContent: 'flex-end', backgroundColor: 'rgba(22,17,13,0.55)' },
+    drawer: { zIndex: 2, elevation: 12 },
+    drawerSurface: { padding: 24, paddingBottom: 36, backgroundColor: colors.background, borderTopLeftRadius: 24, borderTopRightRadius: 24, gap: 12 },
+    dragHandle: { width: 48, height: 5, borderRadius: 3, backgroundColor: colors.border, alignSelf: 'center', marginTop: -10, marginBottom: 2 },
+    drawerHeader: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }, close: { padding: 10 },
 });
