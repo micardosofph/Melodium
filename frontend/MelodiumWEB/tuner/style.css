@@ -5,9 +5,11 @@
 
 /* --- Estilos do Card do Afinador --- */
 .afinador-wrapper {
-  padding-top: calc(5rem + 2vw);
+  min-height: calc(100vh - 7rem);
   display: flex;
+  align-items: center;
   justify-content: center;
+  padding: 1rem 0 2rem;
 }
 
 .afinador-card {
@@ -16,7 +18,7 @@
   background: var(--bg-card-white);
   border-radius: var(--radius-lg);
   padding: 2rem;
-  margin: 0 4vw 4vw;
+  margin: 0;
   text-align: center;
 }
 

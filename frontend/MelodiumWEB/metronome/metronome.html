@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Melodium - Metrônomo de Precisão</title>
+    <link rel="icon" type="image/svg+xml" href="../global/images/logo_minimalist.svg">
     <link rel="stylesheet" href="../global/style.css">
     <link rel="stylesheet" href="style.css">
 </head>
@@ -15,46 +16,49 @@
     <div class="headerOverlay"></div>
     <div class="headerSafeArea"></div>
 
-    <main id="metronome" class="border-main">
-        <div class="metronome-header">
-            <span class="panel-tag">Módulo de Ritmo</span>
-            <span id="beat-counter">--</span>
-        </div>
+    <main class="metronome-wrapper">
+        <section id="metronome" class="border-main">
 
-        <div class="metronomeClicksContainer" id="beats-container">
-        </div>
-
-        <div class="controlBpmAndPlayerContainer">
-            <div class="flex-row">
-                <button id="decreaseTempo" class="border-main" aria-label="Diminuir Tempo">-</button>
-                <input type="range" id="bpm-slider" min="40" max="260" value="100">
-                <button id="increaseTempo" class="border-main" aria-label="Aumentar Tempo">+</button>
+            <div class="metronome-header">
+                <span class="panel-tag">Módulo de Ritmo</span>
+                <span id="beat-counter">--</span>
             </div>
 
-            <div class="bpm-text-display">
-                <span id="bpm-display">100</span> <span class="bpm-sub">BPM</span>
+            <div class="metronomeClicksContainer" id="beats-container">
             </div>
 
-            <button id="start-stop" class="border-main">Start</button>
-        </div>
+            <div class="controlBpmAndPlayerContainer">
+                <div class="flex-row">
+                    <button id="decreaseTempo" class="border-main" aria-label="Diminuir Tempo">-</button>
+                    <input type="range" id="bpm-slider" min="40" max="260" value="100">
+                    <button id="increaseTempo" class="border-main" aria-label="Aumentar Tempo">+</button>
+                </div>
 
-        <div class="metronomeControls" id="metronome-controls">
-            <button id="metronome-controls-button-minus" class="border-main">-</button>
-            <div class="beat-count-wrapper">
-                <span id="metronome-controls-beat-count">4</span>
-                <span class="beat-count-label">Tempos</span>
-            </div>
-            <button id="metronome-controls-button-plus" class="border-main">+</button>
-        </div>
+                <div class="bpm-text-display">
+                    <span id="bpm-display">100</span> <span class="bpm-sub">BPM</span>
+                </div>
 
-        <div class="metronome-volume-panel border-main">
-            <label for="metronome-volume-slider">Volume do Clique</label>
-            <div class="metronome-volume-row">
-                <span id="metronome-volume-value">100%</span>
-                <input id="metronome-volume-slider" type="range" min="1" max="100" value="100"
-                    aria-label="Volume do metrônomo">
+                <button id="start-stop" class="border-main">Start</button>
             </div>
-        </div>
+
+            <div class="metronomeControls" id="metronome-controls">
+                <button id="metronome-controls-button-minus" class="border-main">-</button>
+                <div class="beat-count-wrapper">
+                    <span id="metronome-controls-beat-count">4</span>
+                    <span class="beat-count-label">Tempos</span>
+                </div>
+                <button id="metronome-controls-button-plus" class="border-main">+</button>
+            </div>
+
+            <div class="metronome-volume-panel border-main">
+                <label for="metronome-volume-slider">Volume do Clique</label>
+                <div class="metronome-volume-row">
+                    <span id="metronome-volume-value">100%</span>
+                    <input id="metronome-volume-slider" type="range" min="1" max="100" value="100"
+                        aria-label="Volume do metrônomo">
+                </div>
+            </div>
+        </section>
     </main>
 
     <script src="../global/header.js"></script>

@@ -27,7 +27,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  padding: calc(5.5rem + 2vw) 1rem 2rem;
+  padding: 1rem 0 2rem;
 }
 
 .container {
@@ -192,10 +192,6 @@ h1 {
 }
 
 @media (max-width: 640px) {
-  body {
-    padding: 1rem;
-  }
-
   .container {
     padding: 1.25rem;
   }

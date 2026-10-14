@@ -2,250 +2,246 @@
 <html lang="pt-BR">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Melodium - A Ciência da Constância Musical</title>
-    <link rel="stylesheet" href="../global/style.css">
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description"
+    content="Melodium organiza sua prática musical e oferece ferramentas gratuitas para estudar no navegador.">
+  <title>Melodium | Sua evolução musical, todos os dias</title>
+  <link rel="icon" type="image/svg+xml" href="../global/images/logo_minimalist.svg">
+  <link rel="stylesheet" href="../global/style.css">
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
+  <div class="headerSafeArea" aria-hidden="true"></div>
+  <div class="headerOverlay" aria-hidden="true"></div>
+  <div id="header-placeholder"></div>
 
-    <div id="header-placeholder"></div>
-
-
-    <div class="headerOverlay">
-
-    </div>
-
-    <div class="headerSafeArea">
-
-    </div>
-
-    <main class="bento-container">
-
-        <div class="bento-col">
-
-
-
-            <div class="card card-programs border-main row-span-3" aria-label="Estatística de Engajamento">
-                <div class="card-header-row">
-                    <div>
-                        <div class="stat-big" id="valor-ofensiva">45 Dias</div>
-                        <div class="stat-label" id="texto-ofensiva">Ofensiva de Prática Atual</div>
-                    </div>
-                    <div class="btn-arrow-circle border-main">
-                        <span style="font-size: 1.2rem;">🔥</span>
-                    </div>
-                </div>
-                <div class="graphic-stack">
-                    <div class="stack-item">✓</div>
-                    <div class="stack-item">✓</div>
-                    <div class="stack-item">✓</div>
-                    <div class="stack-item">✓</div>
-                </div>
-            </div>
-
-            <div class="card card-ticket border-main row-span-3">
-                <div class="card-header-row">
-                    <h2 class="ticket-title">Evolução<br>Mensal</h2>
-                    <span class="badge-discount border-main">Áudio/Vídeo</span>
-                </div>
-
-                <div class="card-header-row" style="align-items: flex-end;">
-                    <p class="ticket-desc">Módulo comparativo empírico. Grave seu progresso técnico e analise sua
-                        evolução a longo prazo.</p>
-                    <div class="ticket-pricing">
-                        <span class="price-current">Julho</span>
-                        <span class="price-old">Junho</span>
-                    </div>
-                </div>
-
-                <hr class="ticket-divider">
-
-                <div class="ticket-dates">
-                    <span>Meta Concluída</span>
-                    <span>Histórico Ativo</span>
-                </div>
-
-                <hr class="ticket-divider">
-
-                <div class="ticket-footer">
-                    <div>
-                        <div class="time-big">20 min</div>
-                        <div class="duration-sub">Média Diária Salva</div>
-                    </div>
-                    <div class="barcode"></div>
-                </div>
-            </div>
-
+  <main class="landing-shell">
+    <section class="hero border-main" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <p class="eyebrow">Prática musical com propósito</p>
+        <h1 id="hero-title">Transforme pequenos treinos em uma evolução que você consegue ver.</h1>
+        <p class="hero-description">O Melodium reúne prática, gravações e progresso em um aplicativo feito para
+          acompanhar sua jornada musical. No computador, ferramentas essenciais continuam a um clique.</p>
+        <div class="hero-actions">
+          <button class="button button-primary" id="open-mobile-guide" type="button">Iniciar prática <span
+              aria-hidden="true">→</span></button>
+          <a class="button button-secondary" href="#ferramentas-web">Explorar ferramentas web</a>
         </div>
-
-        <div class="bento-col">
-
-
-
-            <div class="card card-reviews border-main bento-item" aria-label="Selos de Inclusão">
-                <div class="stars-group">
-                    <span title="Feedback Tátil Sincronizado">📳</span>
-                    <span title="Leitura por Voz Integrada">🗣️</span>
-                    <span title="Filtros de Daltonismo">👁️</span>
-                    <span title="Alto Contraste Nativo">🌓</span>
-                    <span title="Tags ARIA Estruturadas">♿</span>
-                </div>
-                <span class="review-number">
-                    <a href="https://mwpt.com.br/wp-content/uploads/2025/04/ABNT-NBR-17225-Acessibilidade-Digital.pdf"
-                        target="_blank">
-                        ABNT 17225:2025
-                    </a>
-                </span>
-            </div>
-
-            <div class="card card-team border-main row-span-2">
-                <div>
-                    <h3 style="display: flex; align-items: center; gap: 10px;">
-                        Aba Social
-                        <span class="badge-em-breve">Em breve</span>
-                    </h3>
-                    <p>Estamos preparando um espaço para você interagir com outros músicos e explorar curiosidades. Disponível na próxima grande atualização!</p>
-                </div>
-                <div class="avatar-group">
-                    <div class="avatar"><img
-                            src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=100&auto=format&fit=crop"
-                            alt="Estudante"></div>
-                    <div class="avatar"><img
-                            src="https://images.unsplash.com/photo-1498038432885-c6f3f1b912ee?w=100&auto=format&fit=crop"
-                            alt="Estudante"></div>
-                    <div class="avatar"><img
-                            src="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=100&auto=format&fit=crop"
-                            alt="Estudante"></div>
-                </div>
-            </div>
-
-         <a href="../toDoList/toDoList.html" class="card card-covers border-main row-span-3" style="text-decoration: none; color: inherit;">
-                <div class="covers-header">
-                    <h3>Painel de Exercícios</h3>
-                </div>
-                <div class="image-container-circle">
-    <img src="../global/images/toDoList.svg" alt="Ícone de Lista de Tarefas Musicais" class="icone-painel">
-                </div>
-                <div>
-                    <h3>Lista de Tarefas (To-Do)</h3>
-                    <p style="font-size: 1.5rem; font-weight: 600; margin-bottom: 8px;">Evite a preguiça.</p>
-                    <p>Siga cronogramas prontos ou monte sua rotina cirúrgica no teclado do PC.</p>
-                </div>
-            </a>
-
+        <ul class="hero-points" aria-label="Destaques do Melodium">
+          <li>Sem assinatura</li>
+          <li>Dados locais</li>
+          <li>Feito para Android</li>
+        </ul>
+      </div>
+      <div class="app-preview" aria-label="Prévia ilustrativa do aplicativo Melodium">
+        <div class="phone-frame">
+          <div class="phone-top"><span>Melodium</span><span class="profile-mark">Me</span></div>
+          <div class="phone-card phone-card-main"><span class="mini-label">Prática de
+              hoje</span><strong>00:24:18</strong><span>Continue construindo seu som.</span></div>
+          <div class="phone-grid">
+            <div class="phone-card"><span class="mini-label">Progresso</span><strong>7 dias</strong></div>
+            <div class="phone-card phone-card-dark"><span class="mini-label">Gravar</span><strong>●</strong></div>
+          </div>
+          <div class="sound-wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
         </div>
+        <span class="preview-note preview-note-one">Pratique</span><span
+          class="preview-note preview-note-two">Registre</span><span
+          class="preview-note preview-note-three">Evolua</span>
+      </div>
+    </section>
 
+    <section class="value-strip border-main" aria-label="Proposta do Melodium">
+      <span>01 · Crie constância</span><span>02 · Grave sua evolução</span><span>03 · Reconheça seu progresso</span>
+    </section>
 
-        <div class="bento-col bento-col-right">
-            <section class="hero-section">
-                <h1 class="hero-title">
-                    A ciência da constância aplicada ao treino musical</span>
-                </h1>
-                <p class="hero-desc">
-                    O Melodium soluciona a falta de foco que faz iniciantes abandonarem seus instrumentos. Planeje suas
-                    rotinas facilmente na Web e execute-as no Mobile com cronômetros dedicados, logs automáticos de
-                    prática e ferramentas de precisão totalmente acessíveis.
-                </p>
-                <div class="hero-cta-group">
-                    <a href="#" class="btn-primary border-main">
-                        <span style="color: var(--bg-card-green);">Iniciar Prática</span>
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2.5" style="color: var(--bg-card-green);">
-                            <line x1="5" y1="12" x2="19" y2="12"></line>
-                            <polyline points="12 5 19 12 12 19"></polyline>
-                        </svg>
-                    </a>
-                    <a href="#" class="btn-secondary border-main">
-                        <span>Ver Demonstrativo</span>
-                        <div class="play-icon-container">▶</div>
-                    </a>
-                </div>
-            </section>
+    <section class="web-tools" id="ferramentas-web" aria-labelledby="tools-title">
+      <div class="section-heading compact">
+        <p class="eyebrow">Também no navegador</p>
+        <h2 id="tools-title">Abra, use e volte para o instrumento.</h2>
+        <p>Três ferramentas diretas para apoiar o treino sem instalar nada no computador.</p>
+      </div>
+      <div class="tool-grid">
+        <a class="tool-card border-main" href="../metronome/metronome.html"><span class="tool-icon"
+            aria-hidden="true"><svg class="metronome-icon" viewBox="0 0 48 48">
+              <path d="M15 39h18L29.5 10h-11L15 39Z" />
+              <path d="M24 35 31 15" />
+              <path d="M28.5 18h6" />
+            </svg></span>
+          <div>
+            <h3>Metrônomo</h3>
+            <p>Controle andamento, compasso e volume.</p>
+          </div><b aria-hidden="true">↗</b>
+        </a>
+        <a class="tool-card border-main" href="../tuner/tuner.html"><span class="tool-icon" aria-hidden="true">⌁</span>
+          <div>
+            <h3>Afinador</h3>
+            <p>Use o microfone ou sons de referência.</p>
+          </div><b aria-hidden="true">↗</b>
+        </a>
+        <a class="tool-card border-main" href="../chordsDictionary/index.html"><span class="tool-icon"
+            aria-hidden="true">Am</span>
+          <div>
+            <h3>Dicionário de acordes</h3>
+            <p>Consulte formações e notas de cada acorde.</p>
+          </div><b aria-hidden="true">↗</b>
+        </a>
+      </div>
+    </section>
 
-            <div class="stats-row">
-                <a href="../metronome/metronome.html" class="card card-stat-small border-main">
-                    <div class="card-header-row">
-                        <svg class="icon-diamond" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M12 2L22 12L12 22L2 12Z" />
-                        </svg>
-                        <span class="badge-tag-sm">Precisão</span>
-                    </div>
-                    <div>
-                        <div class="stat-big">Metrônomo</div>
-                        <p class="stat-label">Algoritmo com agendador avançado que mitiga atrasos rítmicos,
-                            integrado
-                            com feedback tátil.</p>
-                        </div>
-                    </a>
-                    
-                    <a href="../tuner/tuner.html" class="card card-stat-small border-main">
-                        <svg class="icon-diamond" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M12 2L22 12L12 22L2 12Z" />
-                        </svg>
-                        <div>
-                        <div class="stat-big">Afinador</div>
-                        <p class="stat-label">Análise de frequência em tempo real para manter seu instrumento pronto
-                            sem
-                            sair do aplicativo.</p>
-                    </div>
-                </a>
-            </div>
-        </div>
+    <section class="about-section" id="sobre-app" aria-labelledby="about-title">
+      <div class="section-heading">
+        <p class="eyebrow">Sobre o aplicativo</p>
+        <h2 id="about-title">Um companheiro de prática que cabe na rotina.</h2>
+        <p>O aplicativo concentra o que acontece durante o estudo: tempo real de prática, registros em vídeo, lembretes,
+          diário de evolução e uma visão clara da sua constância.</p>
+      </div>
+      <div class="feature-grid">
+        <article class="feature-card border-main"><span>01</span>
+          <h3>Prática focada</h3>
+          <p>Cronômetro em tela cheia, metrônomo e afinador para manter o foco no instrumento.</p>
+        </article>
+        <article class="feature-card border-main"><span>02</span>
+          <h3>Memória em vídeo</h3>
+          <p>Grave, nomeie e reveja seus estudos para perceber detalhes que passam despercebidos.</p>
+        </article>
+        <article class="feature-card border-main"><span>03</span>
+          <h3>Evolução local</h3>
+          <p>Tempo, práticas e registros permanecem no aparelho, sem exigir uma conta para começar.</p>
+        </article>
+        <article class="feature-card border-main feature-card-accent"><span>04</span>
+          <h3>Constância possível</h3>
+          <p>Lembretes e ofensivas transformam sessões curtas em um hábito musical visível.</p>
+        </article>
+      </div>
+    </section>
 
-    </main>
+    <section class="creators-section" id="criadores" aria-labelledby="creators-title">
+      <div class="section-heading creators-heading">
+        <p class="eyebrow">Quem criou o Melodium</p>
+        <h2 id="creators-title">Tecnologia, música e a vontade de tornar a prática mais constante.</h2>
+        <p>O Melodium nasceu como projeto acadêmico de dois estudantes que também vivem os desafios de aprender e
+          continuar tocando.</p>
+      </div>
+      <div class="creators-grid">
+        <article class="creator-card border-main"><span class="creator-number">01</span>
+          <div>
+            <h3>Miguel</h3>
+            <p>Desenvolvimento, produto e boas ideias entre uma prática e outra — com uma pausa ocasional para Angry
+              Birds.</p>
+          </div>
+        </article>
+        <article class="creator-card creator-purpose border-main"><span class="creator-number">Me</span>
+          <div>
+            <h3>Nosso propósito</h3>
+            <p>Criar uma experiência que ajude músicos a transformar sessões pequenas em uma trajetória que possa ser
+              vista, lembrada e celebrada.</p>
+          </div>
+        </article>
+        <article class="creator-card border-main"><span class="creator-number">02</span>
+          <div>
+            <h3>Yuri</h3>
+            <p>Pesquisa, construção do projeto e aquela dose de personalidade que a equipe define simplesmente como
+              muita aura.</p>
+          </div>
+        </article>
+      </div>
+    </section>
 
+    <section class="dashboard-showcase" id="painel-web" aria-labelledby="dashboard-title">
+      <div class="dashboard-copy">
+        <p class="eyebrow">Painel web</p>
+        <h2 id="dashboard-title">O backend aparece. A constância também.</h2>
+        <p>O painel conecta o cadastro fictício da feira ao servidor Java, mostra a ofensiva registrada e apresenta, ao
+          vivo, os perfis criados por quem passou no estande.</p><a class="button button-dark"
+          href="../dashboard/dashboard.html">Abrir painel completo <span aria-hidden="true">→</span></a>
+      </div>
+      <div class="dashboard-preview border-main" aria-label="Prévia do painel web">
+        <article><span>Ofensiva</span><strong>07</strong><small>dias de prática</small></article>
+        <article><span>Integração Java</span><strong class="online-label"><i></i> Online</strong><small>Perfis do
+            estande em tempo real</small></article>
+        <article class="social-preview"><span>Social</span><strong>Em breve</strong><small>Novas experiências depois da
+            feira</small></article>
+      </div>
+    </section>
 
-    <script src="../global/header.js"></script>
-    <script src="script.js"></script>
+    <section class="accessibility-callout border-main" id="acessibilidade">
+      <div>
+        <p class="eyebrow">Música para mais pessoas</p>
+        <h2>Acessibilidade faz parte do produto.</h2>
+        <p>Conheça os recursos e as referências usados para tornar a experiência mais clara e inclusiva.</p>
+      </div>
+      <a class="button button-secondary" href="../accessibility/accessibility.html">Ver acessibilidade <span
+          aria-hidden="true">→</span></a>
+    </section>
+  </main>
+
+  <footer class="landing-footer"><span>Melodium · 2026</span><span>A ciência da constância aplicada à música.</span>
+  </footer>
+
+  <aside class="integration-widget" id="integration-widget">
+    <button class="integration-trigger" id="integration-trigger" type="button" aria-expanded="false"
+      aria-controls="integration-popover" aria-label="Abrir teste de integração Java"><span class="integration-pulse"
+        aria-hidden="true"></span><span class="integration-trigger-label">API</span></button>
+    <section class="integration-popover border-main" id="integration-popover" hidden
+      aria-labelledby="integration-title">
+      <div class="integration-popover-head">
+        <div>
+          <p class="eyebrow">Ao vivo na feira</p>
+          <h2 id="integration-title">Perfis do estande</h2>
+        </div><button id="close-integration" type="button" aria-label="Fechar teste de integração">×</button>
+      </div>
+      <div class="integration-state"><span class="integration-status-dot" id="landing-integration-dot"
+          aria-hidden="true"></span>
+        <p id="landing-integration-status" role="status" aria-live="polite">Abra para consultar o backend Java.</p>
+      </div>
+      <ul class="stand-profiles" id="landing-profile-list" aria-label="Perfis criados no estande"></ul>
+      <div class="integration-actions"><a href="../auth/auth.html">Criar perfil fictício</a><button
+          id="refresh-integration" type="button">Atualizar</button></div>
+    </section>
+  </aside>
+
+  <dialog class="mobile-guide" id="mobile-guide" aria-labelledby="guide-title">
+    <form method="dialog" class="guide-card">
+      <button class="dialog-close" value="cancel" aria-label="Fechar guia">×</button>
+      <p class="eyebrow">Comece pelo celular</p>
+      <h2 id="guide-title">Leve o Melodium para sua próxima prática.</h2>
+      <ol class="guide-steps">
+        <li><span>1</span>
+          <div><strong>Abra a versão no GitHub</strong>
+            <p>Acesse a página oficial da versão e baixe o arquivo APK no seu Android.</p>
+          </div>
+        </li>
+        <li><span>2</span>
+          <div><strong>Autorize a instalação</strong>
+            <p>Se o Android solicitar, permita temporariamente a instalação dessa fonte.</p>
+          </div>
+        </li>
+        <li><span>3</span>
+          <div><strong>Abra e personalize</strong>
+            <p>Escolha seu nome e horário de lembrete. Você pode começar sem criar uma conta.</p>
+          </div>
+        </li>
+        <li><span>4</span>
+          <div><strong>Pratique e registre</strong>
+            <p>Use o cronômetro, grave vídeos e acompanhe sua evolução diretamente no aparelho.</p>
+          </div>
+        </li>
+      </ol>
+      <div class="dialog-actions">
+        <a class="button button-primary"
+          href="https://github.com/micardosofph/Melodium/releases/download/v1.1.0-preview/Melodium-1.1.0-preview.apk">Baixar
+          APK</a>
+        <a class="text-link" href="https://github.com/micardosofph/Melodium/releases/tag/v1.1.0-preview" target="_blank"
+          rel="noopener noreferrer">Ver a versão no GitHub ↗</a>
+      </div>
+      <p class="dialog-note">Disponível para Android. O download começa pelo arquivo publicado no repositório oficial.
+      </p>
+    </form>
+  </dialog>
+  <script src="../global/header.js"></script>
+  <script src="script.js"></script>
 </body>
 
-</html>
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <title>Melodium - Teste de Conexão</title>
-</head>
-<body>
-
-    <div class="teste-integracao-card">
-    <h2 class="texto-teste-integracao">Teste de Integração - Melodium Web</h2>
-    <p style="color: green;">Conectado com sucesso ao Backend!</p>
-    <ul>
-        <li>Nenhum usuário cadastrado no banco ainda.</li>
-    </ul>
-</div>
-
-    <script>
-        fetch('http://localhost:8080/usuarios')
-            .then(response => response.json())
-            .then(data => {
-                const statusEl = document.getElementById('status');
-                statusEl.textContent = 'Conectado com sucesso ao Backend!';
-                statusEl.style.color = 'green';
-
-                const listaEl = document.getElementById('lista-usuarios');
-                
-                if (data.length === 0) {
-                    listaEl.innerHTML = '<li>Nenhum usuário cadastrado no banco ainda.</li>';
-                } else {
-                    data.forEach(usuario => {
-                        const li = document.createElement('li');
-                        li.textContent = `ID: ${usuario.id_usuario} - Nome: ${usuario.nome}`;
-                        listaEl.appendChild(li);
-                    });
-                }
-            })
-            .catch(error => {
-                console.error('Erro:', error);
-                const statusEl = document.getElementById('status');
-                statusEl.textContent = 'Erro ao conectar com o backend. O Java está rodando?';
-                statusEl.style.color = 'red';
-            });
-    </script>
-
-</body>
 </html>

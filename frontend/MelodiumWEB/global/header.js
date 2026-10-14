@@ -61,9 +61,11 @@
 
     navLinks.forEach((link) => {
       const linkHref = link.getAttribute('href') || '';
-      const linkPathname = new URL(linkHref, window.location.href).pathname.replace(/\/+$/, '') || '/';
+      const linkUrl = new URL(linkHref, window.location.href);
+      const linkPathname = linkUrl.pathname.replace(/\/+$/, '') || '/';
       const isCurrentPage =
-        linkPathname === currentPathname || currentPathname.endsWith(linkPathname);
+        (linkPathname === currentPathname || currentPathname.endsWith(linkPathname)) &&
+        (!linkUrl.hash || linkUrl.hash === window.location.hash);
 
       if (isCurrentPage) {
         link.classList.add('active');
@@ -102,6 +104,7 @@
 
   // Dispara a montagem do componente assim que o DOM estiver pronto
   document.addEventListener('DOMContentLoaded', injectHeaderComponent);
+  window.addEventListener('hashchange', highlightActiveNavLink);
 })();
 
 function abrirModalEmBreve() {

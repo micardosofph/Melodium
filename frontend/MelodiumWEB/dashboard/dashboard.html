@@ -1,58 +1,50 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Melodium | Painel</title>
-    <link rel="stylesheet" href="../global/style.css" />
-    <link rel="stylesheet" href="style.css" />
-  </head>
-  <body>
-    <div class="headerSafeArea" aria-hidden="true"></div>
-    <div class="headerOverlay" aria-hidden="true"></div>
-    <div id="header-placeholder"></div>
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Melodium | Painel Web</title>
+  <link rel="icon" type="image/svg+xml" href="../global/images/logo_minimalist.svg">
+  <link rel="stylesheet" href="../global/style.css"><link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="headerSafeArea" aria-hidden="true"></div><div class="headerOverlay" aria-hidden="true"></div><div id="header-placeholder"></div>
+  <main class="page-shell">
+    <section class="hero-card border-main">
+      <div><p class="eyebrow">Painel Web</p><h1>Sua constância fica mais clara quando cada prática conta.</h1><p class="hero-copy">Acompanhe sua ofensiva conectada ao Melodium e acesse as áreas de apoio ao seu estudo.</p></div>
+      <a class="hero-link" href="../tools/tools.html">Abrir ferramentas <span aria-hidden="true">→</span></a>
+    </section>
 
-    <main class="page-shell">
-      <section class="hero-card border-main">
-        <p class="eyebrow">Painel Web</p>
-        <h1>Seu progresso em um só lugar, com foco no dia a dia.</h1>
-        <p class="hero-copy">
-          Aqui você acompanha rotina, disciplina e evolução musical com uma visão prática e inspiradora.
-        </p>
-      </section>
+    <section class="dashboard-grid">
+      <article class="panel-card streak-card border-main">
+        <div class="card-top"><span class="pill-label">Ofensiva do aluno</span><span class="flame" aria-hidden="true">◆</span></div>
+        <strong class="metric" id="valor-ofensiva">—</strong>
+        <h2 id="texto-ofensiva">Carregando sua ofensiva...</h2>
+        <p id="detalhe-ofensiva">A ofensiva é exibida a partir dos dados reais do perfil.</p>
+      </article>
 
-      <section class="bento-grid">
-        <article class="bento-card border-main highlight-card">
-          <span class="pill-label">Ofensiva do aluno</span>
-          <h2>45 dias seguidos de prática</h2>
-          <p>Seu ritmo atual já se mantém estável há quase dois meses, com foco constante e menos interrupções.</p>
-        </article>
+      <article class="panel-card evolution-card border-main">
+        <div class="card-top"><span class="pill-label">Evolução mensal</span><span aria-hidden="true">↗</span></div>
+        <h2>Seu mês ganha forma prática após prática.</h2>
+        <div class="month-visual" aria-hidden="true"><i style="--h:32%"></i><i style="--h:48%"></i><i style="--h:38%"></i><i style="--h:63%"></i><i style="--h:58%"></i><i style="--h:78%"></i></div>
+        <p>O histórico mensal detalhado será conectado em uma próxima etapa. Sua ofensiva acima já usa os dados reais do servidor.</p>
+      </article>
 
-        <article class="bento-card border-main">
-          <span class="pill-label">Tempo de treino</span>
-          <h2>Média de 20 min por dia</h2>
-          <p>O volume semanal está equilibrado entre aquecimento, técnica e revisão de repertório.</p>
-        </article>
+      <article class="panel-card action-card social-card border-main" aria-disabled="true">
+        <div class="card-top"><span class="pill-label">Social</span><span class="coming-soon-label">Em breve</span></div><div><h2>A comunidade Melodium está sendo afinada.</h2><p>Novas formas de trocar experiências e ampliar o repertório chegam depois da feira.</p></div>
+      </article>
 
-        <article class="bento-card border-main">
-          <span class="pill-label">Evolução mensal</span>
-          <h2>Progresso em áudio e vídeo</h2>
-          <p>Comparações recentes mostram mais precisão, melhor fluxo e maior confiança na execução.</p>
-        </article>
-
-        <article class="bento-card border-main">
-          <span class="pill-label">To-do diário</span>
-          <h2>Organize sua rotina</h2>
-          <ul class="task-list">
-            <li><label><input type="checkbox" checked /> Aquecimento 5 min</label></li>
-            <li><label><input type="checkbox" checked /> Treino de escalas 10 min</label></li>
-            <li><label><input type="checkbox" /> Revisão de repertório 15 min</label></li>
-          </ul>
-        </article>
-      </section>
-    </main>
-
-    <script src="../global/header.js"></script>
-    <script src="dashboard.js"></script>
-  </body>
+      <article class="panel-card integration-card border-main">
+        <div class="card-top"><span class="pill-label">Integração Java</span><span class="connection-dot" id="connection-dot" aria-hidden="true"></span></div>
+        <div class="integration-heading"><div><h2 id="status-integracao">Verificando o servidor...</h2><p id="detalhe-integracao">Consultando <code>GET /usuarios</code> em tempo real.</p></div><code class="endpoint-badge">GET /usuarios</code></div>
+        <div class="integration-metrics" aria-label="Resumo da integração">
+          <div><strong id="total-usuarios">—</strong><span>perfis no estande</span></div>
+          <div><strong id="ultima-atualizacao">—</strong><span>última atualização</span></div>
+        </div>
+        <div class="integration-toolbar"><a class="panel-button" href="../auth/auth.html">Criar perfil fictício</a><button class="secondary-button" id="testar-integracao" type="button">Atualizar mural</button></div>
+        <ul class="user-list" id="lista-usuarios" aria-label="Usuários retornados pela API"></ul>
+      </article>
+    </section>
+  </main>
+  <script src="../global/header.js"></script><script src="dashboard.js"></script>
+</body>
 </html>

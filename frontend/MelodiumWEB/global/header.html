@@ -8,12 +8,11 @@
 
     <nav class="nav-links-container">
     <ul class="nav-links">
-        <li><a href="../about/about.html">Sobre o App</a></li>
+        <li><a href="../landingPage/landingPage.html#sobre-app">Sobre o App</a></li>
+        <li><a href="../landingPage/landingPage.html#ferramentas-web">Ferramentas</a></li>
+        <li><a href="../landingPage/landingPage.html#painel-web">Painel Web</a></li>
+        <li><a href="../landingPage/landingPage.html#acessibilidade">Acessibilidade</a></li>
         <li><a href="#" onclick="abrirModalEmBreve(); return false;">Rotinas Guiadas</a></li>
-        <li><a href="#" onclick="abrirModalEmBreve(); return false;">Aba Social</a></li>
-        <li><a href="../tools/tools.html">Ferramentas</a></li>
-        <li><a href="../accessibility/accessibility.html">Acessibilidade</a></li>
-        <li><a href="../dashboard/dashboard.html">Painel Web</a></li>
     </ul>
     </nav>
 
@@ -21,7 +20,7 @@
         <a href="../auth/auth.html" class="btn-signup border-main">Cadastrar</a>
     </div>
 
-    <button class="menuButton" id="menuButton" onclick="menuButton()">
+    <button class="menuButton" id="menuButton" type="button" aria-label="Abrir ou fechar menu" onclick="menuButton()">
         <img src="../global/images/menuButton.svg" alt="Abrir menu" class="openMenuImage active">
         <img src="../global/images/closeMenuButton.svg" alt="Fechar menu" class="closeMenuImage">
     </button>

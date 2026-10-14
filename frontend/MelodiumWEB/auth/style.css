@@ -1,15 +1,10 @@
-:root {
+﻿:root {
   --auth-panel-bg: rgba(255, 255, 255, 0.95);
   --auth-panel-accent: rgba(194, 224, 188, 0.45);
 }
 
-body {
-  min-height: 100vh;
-  padding-top: 7rem;
-}
-
 .auth-shell {
-  min-height: calc(100vh - 7rem);
+  min-height: calc(100vh - 9rem);
   display: grid;
   place-items: center;
   padding: 1rem 0 2rem;
@@ -28,14 +23,6 @@ body {
 .auth-intro {
   display: grid;
   gap: 0.6rem;
-}
-
-.eyebrow {
-  font-size: 0.8rem;
-  font-weight: 700;
-  letter-spacing: 0.24em;
-  text-transform: uppercase;
-  color: var(--accent-brown);
 }
 
 .auth-intro h1 {
