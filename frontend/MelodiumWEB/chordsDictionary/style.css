@@ -32,6 +32,7 @@ body {
 
 .container {
   width: min(100%, 900px);
+  min-width: 0;
   text-align: center;
   background: var(--bg-card-white);
   border: var(--border-width) solid var(--border-color);
@@ -81,18 +82,65 @@ h1 {
 }
 
 .fretboard-wrapper {
+  width: 100%;
+  min-width: 0;
   overflow-x: auto;
-  padding: 0.25rem 0 0;
+  padding: 0.25rem 0 0.7rem;
+  scrollbar-color: var(--accent-brown) rgba(97, 43, 6, 0.12);
+  scrollbar-width: thin;
 }
 
 .fretboard {
+  --string-label-width: 62px;
+  --fret-width: 48px;
   display: flex;
   flex-direction: column;
   background: linear-gradient(180deg, #fffdf8 0%, #f4efe7 100%);
   border: var(--border-width) solid var(--border-color);
   border-radius: var(--radius-md);
   padding: 0.75rem 0 0.5rem;
-  min-width: 620px;
+  width: calc(var(--string-label-width) + (var(--fret-width) * var(--fret-count)));
+  min-width: 100%;
+}
+
+.fret-number-row {
+  display: flex;
+  align-items: end;
+  height: 34px;
+  border-bottom: 1px solid rgba(97, 43, 6, 0.18);
+}
+
+.fret-number-label,
+.string-label {
+  position: sticky;
+  left: 0;
+  flex: 0 0 var(--string-label-width);
+  width: var(--string-label-width);
+  background: #fffdf8;
+}
+
+.fret-number-label {
+  z-index: 5;
+  align-self: stretch;
+  display: grid;
+  place-items: center;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  opacity: 0.72;
+}
+
+.fret-number {
+  flex: 0 0 var(--fret-width);
+  width: var(--fret-width);
+  padding-bottom: 0.45rem;
+  color: var(--accent-brown);
+  font-size: 0.72rem;
+  font-weight: 800;
+  line-height: 1;
+  text-align: center;
+  opacity: 0.75;
 }
 
 .string-row {
@@ -105,7 +153,7 @@ h1 {
 .string-row::before {
   content: '';
   position: absolute;
-  left: 56px;
+  left: var(--string-label-width);
   right: 0;
   top: 50%;
   height: 2px;
@@ -115,16 +163,16 @@ h1 {
 }
 
 .string-label {
-  width: 56px;
   font-weight: 700;
   text-align: center;
   color: var(--accent-brown);
   opacity: 0.85;
-  z-index: 2;
+  z-index: 4;
 }
 
 .fret-cell {
-  flex: 1;
+  flex: 0 0 var(--fret-width);
+  width: var(--fret-width);
   height: 100%;
   border-right: 1.5px solid rgba(97, 43, 6, 0.2);
   display: flex;
@@ -133,6 +181,11 @@ h1 {
   cursor: pointer;
   position: relative;
   z-index: 2;
+}
+
+.fret-cell:focus-visible {
+  outline: 3px solid var(--bg-card-green);
+  outline-offset: -4px;
 }
 
 .fret-cell.open-fret {
@@ -154,14 +207,14 @@ h1 {
 }
 
 .marker.muted {
-  background-color: #c96f5d;
+  background-color: var(--accent-brown);
   color: #fff;
-  border-color: #9e4d3a;
+  border-color: var(--accent-brown);
 }
 
 .marker.pressed {
   background-color: var(--accent-brown);
-  color: var(--bg-card-green);
+  color: #fff;
   box-shadow: 0 0 0 4px rgba(97, 43, 6, 0.12);
 }
 

@@ -2,13 +2,31 @@
 const NOTE_NAMES = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
 const STRING_TUNINGS = [4, 11, 7, 2, 9, 4]; // Mizinha até Mizão
 const STRING_LABELS = ["e", "B", "G", "D", "A", "E"];
-const TOTAL_FRETS = 12; // Aumentado para 12 casas para abranger mais acordes
+const TOTAL_FRETS = 24;
 
 let currentFrets = [-1, -1, -1, -1, -1, -1];
 
 function buildFretboard() {
   const container = document.getElementById("fretboard");
   container.innerHTML = "";
+  container.style.setProperty("--fret-count", TOTAL_FRETS + 1);
+
+  const numberRow = document.createElement("div");
+  numberRow.className = "fret-number-row";
+
+  const numberLabel = document.createElement("div");
+  numberLabel.className = "fret-number-label";
+  numberLabel.innerText = "Casa";
+  numberRow.appendChild(numberLabel);
+
+  for (let fretIdx = 0; fretIdx <= TOTAL_FRETS; fretIdx++) {
+    const number = document.createElement("span");
+    number.className = "fret-number";
+    number.innerText = fretIdx;
+    numberRow.appendChild(number);
+  }
+
+  container.appendChild(numberRow);
 
   for (let stringIdx = 0; stringIdx < 6; stringIdx++) {
     const row = document.createElement("div");
@@ -36,8 +54,11 @@ function buildFretboard() {
 function createCell(stringIdx, fretIdx) {
   const cell = document.createElement("div");
   cell.className = "fret-cell";
+  cell.setAttribute("role", "button");
+  cell.setAttribute("tabindex", "0");
+  cell.setAttribute("aria-label", `${STRING_LABELS[stringIdx]}, casa ${fretIdx}`);
   
-  cell.addEventListener("click", () => {
+  const selectFret = () => {
     if (fretIdx === 0) {
       currentFrets[stringIdx] = currentFrets[stringIdx] === 0 ? -1 : 0;
     } else {
@@ -45,6 +66,14 @@ function createCell(stringIdx, fretIdx) {
     }
     updateUI();
     identifyChord();
+  };
+
+  cell.addEventListener("click", selectFret);
+  cell.addEventListener("keydown", (event) => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      selectFret();
+    }
   });
 
   return cell;
@@ -59,11 +88,12 @@ function updateUI() {
 
     cells.forEach((cell, fretIdx) => {
       cell.innerHTML = "";
+      cell.setAttribute("aria-pressed", String(activeFret === fretIdx));
 
       if (fretIdx === 0) {
         const marker = document.createElement("span");
         marker.className = "marker " + (activeFret === 0 ? "open" : "muted");
-        marker.innerText = activeFret === 0 ? "O" : "X";
+        marker.innerText = activeFret === 0 ? "O" : "–";
         cell.appendChild(marker);
       } else if (fretIdx === activeFret) {
         const marker = document.createElement("span");
@@ -73,6 +103,12 @@ function updateUI() {
       }
     });
   });
+}
+
+function formatChordName(chordName) {
+  // O Tonal representa tríades maiores com "M" (CM). Na interface musical,
+  // a forma mais familiar é apenas a fundamental (C), inclusive em inversões.
+  return chordName.replace(/^([A-G](?:#|b)?)M(\/[A-G](?:#|b)?)?$/, "$1$2");
 }
 
 // LÓGICA AUTOMÁTICA DE IDENTIFICAÇÃO DE ACORDES COM TONAL.JS
@@ -105,11 +141,11 @@ function identifyChord() {
 
   if (detectedChords && detectedChords.length > 0) {
     // Exibe o primeiro acorde encontrado (o mais provável)
-    nameEl.innerText = detectedChords[0];
+    nameEl.innerText = formatChordName(detectedChords[0]);
     
     // Se houver nomes alternativos para essa mesma posição, exibe também
     if (detectedChords.length > 1) {
-      const alternates = detectedChords.slice(1, 3).join(", ");
+      const alternates = detectedChords.slice(1, 3).map(formatChordName).join(", ");
       notesEl.innerText = `Notas: ${uniqueNotes.join(" - ")} | Outros nomes: ${alternates}`;
     } else {
       notesEl.innerText = `Notas: ${uniqueNotes.join(" - ")}`;
