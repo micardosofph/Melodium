@@ -372,10 +372,10 @@
     line-height: 1;
 }
 
-.tool-icon--chords svg {
+.tool-icon--chords img {
     display: block;
-    color: var(--accent-brown);
-    fill: currentColor;
+    width: 1.65rem;
+    height: 1.65rem;
 }
 
 .metronome-icon,
