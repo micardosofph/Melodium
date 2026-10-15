@@ -243,7 +243,9 @@ main,
   color: var(--text-color);
   font-size: 0.95rem;
   font-weight: 500;
-  transition: color 0.2s ease, border-color 0.2s ease;
+  border-bottom: 2px solid transparent;
+  padding-bottom: 0.18rem;
+  transition: color 0.2s ease, border-color 0.2s ease, font-weight 0.2s ease;
 }
 
 .nav-links a.active {
@@ -449,44 +451,102 @@ main,
 }
 
 .modal-em-breve-overlay {
-    display: none; 
+    display: none;
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.6);
-    z-index: 9999; 
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    z-index: 9999;
     align-items: center;
     justify-content: center;
+    padding: 1rem;
+    animation: notice-backdrop-in .2s ease both;
 }
 
-
 .modal-em-breve-content {
-    background-color: #fcfcfc; 
-    padding: 30px;
-    border-radius: 12px;
+    background-color: #fcfcfc;
+    padding: clamp(1.5rem, 4vw, 2rem);
+    border-radius: 18px;
     text-align: center;
     max-width: 400px;
     width: 90%;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+    box-shadow: 0 18px 44px rgba(0, 0, 0, .22), 0 4px 12px rgba(97, 43, 6, .12);
+    animation: notice-card-in .28s cubic-bezier(.2, .8, .2, 1) both;
+    transition: transform .22s ease, box-shadow .22s ease;
+}
+
+.modal-em-breve-content:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 24px 52px rgba(0, 0, 0, .24), 0 7px 18px rgba(97, 43, 6, .14);
+}
+
+.modal-em-breve-content h3 {
+    line-height: 1.2;
+    margin-bottom: .65rem;
+}
+
+.modal-em-breve-content p {
+    line-height: 1.55;
 }
 
 .btn-fechar-modal {
-    margin-top: 20px;
-    padding: 10px 25px;
+    margin-top: 1.25rem;
+    padding: .72rem 1.5rem;
     background-color: #62745f;
     color: white;
     border: none;
-    border-radius: 8px;
+    border-radius: 10px;
     cursor: pointer;
     font-size: 1rem;
     font-weight: bold;
-    transition: 0.3s;
+    box-shadow: 0 5px 12px rgba(97, 43, 6, .2);
+    transition: transform .18s ease, box-shadow .18s ease;
 }
 
 .btn-fechar-modal:hover {
-    opacity: 0.8;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 17px rgba(97, 43, 6, .25);
+}
+
+.btn-fechar-modal:active {
+    transform: translateY(0) scale(.98);
+}
+
+.btn-fechar-modal:focus-visible {
+    outline: 3px solid var(--bg-card-green);
+    outline-offset: 3px;
+}
+
+@keyframes notice-backdrop-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes notice-card-in {
+    from { opacity: 0; transform: translateY(12px) scale(.97); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .modal-em-breve-overlay,
+    .modal-em-breve-content {
+        animation: none;
+        transition: none;
+    }
+
+    .btn-fechar-modal {
+        transition: none;
+    }
+
+    .modal-em-breve-content:hover,
+    .btn-fechar-modal:active,
+    .btn-fechar-modal:hover {
+        transform: none;
+    }
 }
 .nav-links a[href="#"] {
     border-bottom: none !important;

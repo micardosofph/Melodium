@@ -74,7 +74,11 @@
             <p>Controle andamento, compasso e volume.</p>
           </div><b aria-hidden="true">↗</b>
         </a>
-        <a class="tool-card border-main" href="../tuner/tuner.html"><span class="tool-icon" aria-hidden="true">⌁</span>
+        <a class="tool-card border-main" href="../tuner/tuner.html"><span class="tool-icon" aria-hidden="true"><svg class="tuner-icon" viewBox="0 0 48 48">
+              <path d="M17 8v9c0 4 3.1 7 7 7s7-3 7-7V8" />
+              <path d="M24 24v15" />
+              <path d="M19 39h10" />
+            </svg></span>
           <div>
             <h3>Afinador</h3>
             <p>Use o microfone ou sons de referência.</p>
@@ -152,15 +156,16 @@
     <section class="dashboard-showcase" id="painel-web" aria-labelledby="dashboard-title">
       <div class="dashboard-copy">
         <p class="eyebrow">Painel web</p>
-        <h2 id="dashboard-title">O backend aparece. A constância também.</h2>
-        <p>O painel conecta o cadastro fictício da feira ao servidor Java, mostra a ofensiva registrada e apresenta, ao
-          vivo, os perfis criados por quem passou no estande.</p><a class="button button-dark"
+        <h2 id="dashboard-title">Perfis cadastrados e novidades do Melodium.</h2>
+        <p>Acompanhe quantas pessoas já se cadastraram no estande e veja o que vem a seguir para a comunidade.</p><a class="button button-dark"
           href="../dashboard/dashboard.html">Abrir painel completo <span aria-hidden="true">→</span></a>
       </div>
-      <div class="dashboard-preview border-main" aria-label="Prévia do painel web">
-        <article><span>Ofensiva</span><strong>07</strong><small>dias de prática</small></article>
-        <article><span>Integração Java</span><strong class="online-label"><i></i> Online</strong><small>Perfis do
-            estande em tempo real</small></article>
+      <div class="dashboard-preview border-main" aria-label="Resumo dos cadastros e das novidades">
+        <article class="signup-preview">
+          <span>Cadastros</span>
+          <strong id="landing-signup-count" aria-live="polite">—</strong>
+          <small id="landing-signup-message">Consultando os cadastros no banco...</small>
+        </article>
         <article class="social-preview"><span>Social</span><strong>Em breve</strong><small>Novas experiências depois da
             feira</small></article>
       </div>

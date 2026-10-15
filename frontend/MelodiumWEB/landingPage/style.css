@@ -300,30 +300,29 @@
     grid-template-columns: auto minmax(0, 1fr) auto;
     align-items: center;
     gap: 1rem;
-    transition: transform .25s ease;
+    box-shadow: 0 5px 14px rgba(97, 43, 6, .05);
+    transition: transform .25s ease, box-shadow .25s ease;
 }
 
 .tool-card::before {
     content: '';
     position: absolute;
-    z-index: -1;
-    left: 1.35rem;
-    bottom: 1.35rem;
-    width: 3rem;
-    height: 3rem;
-    border-radius: 50%;
+    inset: 0;
+    z-index: 0;
+    border-radius: inherit;
     background: var(--bg-card-green);
-    transform: scale(1);
-    transform-origin: center;
-    transition: transform .58s cubic-bezier(.65, 0, .35, 1);
+    clip-path: circle(0 at 3rem 50%);
+    transition: clip-path .58s cubic-bezier(.65, 0, .35, 1);
+    pointer-events: none;
 }
 
 .tool-card:hover {
     transform: translateY(-4px);
+    box-shadow: 0 13px 26px rgba(97, 43, 6, .12);
 }
 
 .tool-card:hover::before {
-    transform: scale(18);
+    clip-path: circle(150% at 3rem 50%);
 }
 
 .tool-card>* {
@@ -347,14 +346,19 @@
 .tool-icon {
     width: 3rem;
     height: 3rem;
+    min-width: 3rem;
+    min-height: 3rem;
+    aspect-ratio: 1;
     display: grid;
     place-items: center;
     border-radius: 50%;
     background: var(--bg-card-green);
     font-weight: 900;
+    line-height: 1;
 }
 
-.metronome-icon {
+.metronome-icon,
+.tuner-icon {
     width: 2rem;
     height: 2rem;
     fill: none;
@@ -362,6 +366,10 @@
     stroke-width: 2.4;
     stroke-linecap: round;
     stroke-linejoin: round;
+}
+
+.tuner-icon {
+    stroke-width: 2.7;
 }
 
 .creators-heading {
@@ -472,9 +480,8 @@
     gap: .45rem;
 }
 
-.dashboard-preview article:first-child {
-    grid-row: span 2;
-    min-height: 318px;
+.dashboard-preview .signup-preview {
+    min-height: 220px;
     background: var(--bg-card-green);
 }
 
@@ -483,9 +490,9 @@
     line-height: 1;
 }
 
-.dashboard-preview article:first-child strong {
+.dashboard-preview .signup-preview strong {
     margin-top: auto;
-    font-size: clamp(4rem, 8vw, 7rem);
+    font-size: clamp(3rem, 6vw, 5rem);
     letter-spacing: -.08em;
 }
 
@@ -531,11 +538,12 @@
     font-weight: 900;
     cursor: pointer;
     box-shadow: 0 12px 30px rgba(97, 43, 6, .3);
-    transition: transform .2s ease;
+    transition: transform .2s ease, box-shadow .2s ease;
 }
 
 .integration-trigger:hover {
     transform: translateY(-3px) scale(1.03);
+    box-shadow: 0 16px 36px rgba(97, 43, 6, .36);
 }
 
 .integration-pulse {
@@ -560,8 +568,13 @@
     border-radius: var(--radius-lg);
     color: var(--accent-brown);
     background: var(--bg-page);
-    box-shadow: 0 22px 60px rgba(40, 22, 8, .26);
+    box-shadow: 0 24px 64px rgba(40, 22, 8, .28), 0 5px 16px rgba(97, 43, 6, .12);
     overflow: auto;
+    transform-origin: bottom right;
+}
+
+.integration-popover:not([hidden]) {
+    animation: api-popover-in .22s cubic-bezier(.2, .8, .2, 1) both;
 }
 
 .integration-popover[hidden] {
@@ -591,6 +604,13 @@
     background: #fff;
     font-size: 1.25rem;
     cursor: pointer;
+    box-shadow: 0 3px 8px rgba(97, 43, 6, .12);
+    transition: transform .18s ease, box-shadow .18s ease;
+}
+
+.integration-popover-head button:hover {
+    transform: rotate(8deg) scale(1.06);
+    box-shadow: 0 6px 13px rgba(97, 43, 6, .18);
 }
 
 .integration-state {
@@ -601,6 +621,7 @@
     display: flex;
     align-items: center;
     gap: .75rem;
+    box-shadow: 0 4px 12px rgba(97, 43, 6, .07);
 }
 
 .integration-state p {
@@ -644,6 +665,13 @@
     grid-template-columns: 2.5rem 1fr auto;
     align-items: center;
     gap: .7rem;
+    box-shadow: 0 2px 7px rgba(97, 43, 6, .05);
+    transition: transform .18s ease, box-shadow .18s ease;
+}
+
+.stand-profile:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 7px 15px rgba(97, 43, 6, .12);
 }
 
 .stand-profile-avatar {
@@ -707,6 +735,22 @@
     font-size: .8rem;
     font-weight: 800;
     cursor: pointer;
+    box-shadow: 0 3px 8px rgba(97, 43, 6, .1);
+    transition: transform .18s ease, box-shadow .18s ease;
+}
+
+.integration-actions a:hover,
+.integration-actions button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 7px 14px rgba(97, 43, 6, .16);
+}
+
+.integration-popover button:focus-visible,
+.integration-actions a:focus-visible,
+.integration-actions button:focus-visible,
+.dialog-close:focus-visible {
+    outline: 3px solid var(--bg-card-green);
+    outline-offset: 3px;
 }
 
 .integration-actions a {
@@ -767,6 +811,17 @@
     color: var(--accent-brown);
     background: var(--bg-page);
     overflow: auto;
+    box-shadow: 0 26px 70px rgba(40, 22, 8, .3), 0 6px 18px rgba(97, 43, 6, .13);
+    transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.mobile-guide[open] {
+    animation: guide-dialog-in .24s cubic-bezier(.2, .8, .2, 1) both;
+}
+
+.mobile-guide[open]:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 30px 76px rgba(40, 22, 8, .32), 0 8px 22px rgba(97, 43, 6, .16);
 }
 
 .mobile-guide::backdrop {
@@ -799,6 +854,13 @@
     color: inherit;
     font-size: 1.4rem;
     cursor: pointer;
+    box-shadow: 0 3px 8px rgba(97, 43, 6, .12);
+    transition: transform .18s ease, box-shadow .18s ease;
+}
+
+.dialog-close:hover {
+    transform: rotate(8deg) scale(1.06);
+    box-shadow: 0 6px 13px rgba(97, 43, 6, .18);
 }
 
 .guide-steps {
@@ -848,6 +910,16 @@
 .dialog-note {
     font-size: .8rem;
     opacity: .7;
+}
+
+@keyframes api-popover-in {
+    from { opacity: 0; transform: translateY(10px) scale(.98); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes guide-dialog-in {
+    from { opacity: 0; transform: translateY(14px) scale(.98); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 @media (max-width: 900px) {
@@ -939,8 +1011,7 @@
         transform: none;
     }
 
-    .dashboard-preview article:first-child {
-        grid-row: auto;
+    .dashboard-preview .signup-preview {
         min-height: 180px;
     }
 
@@ -970,13 +1041,47 @@
 
 @media (prefers-reduced-motion: reduce) {
 
-    .tool-card::before,
+    .tool-card,
     .creator-card,
-    .integration-trigger {
+    .integration-trigger,
+    .integration-popover,
+    .integration-popover-head button,
+    .stand-profile,
+    .integration-actions a,
+    .integration-actions button,
+    .mobile-guide,
+    .dialog-close {
         transition: none;
     }
 
     .integration-pulse {
         animation: none;
+    }
+
+    .integration-popover:not([hidden]),
+    .mobile-guide[open] {
+        animation: none;
+    }
+
+    .integration-trigger:hover,
+    .integration-popover-head button:hover,
+    .stand-profile:hover,
+    .integration-actions a:hover,
+    .integration-actions button:hover,
+    .mobile-guide[open]:hover,
+    .dialog-close:hover {
+        transform: none;
+    }
+
+    .tool-card:hover {
+        transform: none;
+    }
+
+    .tool-card::before {
+        display: none;
+    }
+
+    .tool-card:hover {
+        background: var(--bg-card-green);
     }
 }

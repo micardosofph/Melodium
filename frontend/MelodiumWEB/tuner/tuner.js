@@ -315,7 +315,10 @@ async function startTuning() {
     isTunerRunning = false;
     console.error('[Tuner] Erro ao iniciar captura:', err);
     stopTuning();
-    alert('Erro ao carregar o microfone. Verifique as permissões de gravação do seu navegador.');
+    window.mostrarAvisoMelodium?.(
+      'Microfone indisponível',
+      'Não foi possível carregar o microfone. Verifique as permissões de gravação do navegador e tente novamente.'
+    );
   }
 }
 

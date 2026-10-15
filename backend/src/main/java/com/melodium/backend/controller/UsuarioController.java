@@ -3,11 +3,12 @@ package com.melodium.backend.controller;
 import com.melodium.backend.model.Usuario;
 import com.melodium.backend.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -19,23 +20,34 @@ public class UsuarioController {
     private UsuarioRepository usuarioRepository;
 
     @GetMapping
-    public List<Usuario> listar() {
-        return usuarioRepository.findAll();
+    public ResponseEntity<?> listar() {
+        try {
+            return ResponseEntity.ok(usuarioRepository.findAll());
+        } catch (DataAccessException erro) {
+            return bancoIndisponivel();
+        }
     }
 
     @PostMapping
     public ResponseEntity<?> criar(@RequestBody Usuario usuario) {
-        Optional<Usuario> existente = usuarioRepository.findByEmail(usuario.getEmail());
-        if(existente.isPresent()){
-             return ResponseEntity.badRequest().body("Usuário já existe");
+        try {
+            Optional<Usuario> existente = usuarioRepository.findByEmail(usuario.getEmail());
+            if (existente.isPresent()) {
+                return ResponseEntity.badRequest().body("Este e-mail já está cadastrado.");
+            }
+
+            // O cadastro do site usa somente nome e e-mail.
+            usuario.setSenha_hash(null);
+            Usuario salvo = usuarioRepository.save(usuario);
+            return ResponseEntity.ok(salvo);
+        } catch (DataAccessException erro) {
+            return bancoIndisponivel();
         }
-        
-        if (usuario.getSenha_hash() == null || usuario.getSenha_hash().isEmpty()) {
-            usuario.setSenha_hash("senha_visitante_padrao_2026");
-        }
-        
-        Usuario salvo = usuarioRepository.save(usuario);
-        return ResponseEntity.ok(salvo);
+    }
+
+    private ResponseEntity<String> bancoIndisponivel() {
+        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
+                .body("Banco de dados indisponível. Ligue o MySQL e o backend Java e tente novamente.");
     }
 
     @PostMapping("/login")
@@ -44,7 +56,7 @@ public class UsuarioController {
 
         if (usuarioEncontrado.isPresent()) {
             Usuario usuario = usuarioEncontrado.get();
-            if (usuario.getSenha_hash().equals(usuarioLogin.getSenha_hash())) {
+            if (usuario.getSenha_hash() != null && usuario.getSenha_hash().equals(usuarioLogin.getSenha_hash())) {
                 return ResponseEntity.ok(usuario);
             }
         }
