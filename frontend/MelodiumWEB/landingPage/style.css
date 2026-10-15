@@ -616,8 +616,8 @@
 }
 
 .integration-popover-head button {
-    width: 2.35rem;
-    height: 2.35rem;
+    width: 2.75rem;
+    height: 2.75rem;
     flex: 0 0 auto;
     border: 1px solid var(--accent-brown);
     border-radius: 50%;
@@ -867,8 +867,8 @@
     position: absolute;
     top: 1rem;
     right: 1rem;
-    width: 2.5rem;
-    height: 2.5rem;
+    width: 2.75rem;
+    height: 2.75rem;
     border: 1px solid var(--accent-brown);
     border-radius: 50%;
     background: #fff;
@@ -1050,13 +1050,52 @@
     }
 
     .integration-widget {
-        right: .75rem;
-        bottom: .75rem;
+        position: relative;
+        right: auto;
+        bottom: auto;
+        width: 100%;
+        margin-top: 1rem;
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    .integration-trigger {
+        width: 3.5rem;
+        height: 3.5rem;
     }
 
     .integration-popover {
+        bottom: 4.25rem;
         width: calc(100vw - 1.5rem);
         max-height: calc(100vh - 7rem);
+    }
+
+    .mobile-guide {
+        max-height: calc(100dvh - 2rem);
+    }
+
+    .guide-card {
+        padding: 1rem;
+        gap: .8rem;
+    }
+
+    .guide-card h2 {
+        padding-right: 2.5rem;
+        font-size: clamp(1.6rem, 8vw, 2rem);
+    }
+
+    .guide-steps {
+        gap: .55rem;
+    }
+
+    .guide-steps li {
+        padding: .7rem;
+        gap: .65rem;
+    }
+
+    .dialog-close {
+        top: .75rem;
+        right: .75rem;
     }
 }
 
