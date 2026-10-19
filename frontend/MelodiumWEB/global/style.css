@@ -561,3 +561,7 @@ main,
     font-weight: 500 !important;
     opacity: 80%;
 }
+
+.texto {
+  padding-left: 0.5rem;
+}
