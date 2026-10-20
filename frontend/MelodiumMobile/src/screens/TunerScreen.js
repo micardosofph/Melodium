@@ -12,6 +12,8 @@ import {
 import LiveAudioStream from 'react-native-live-audio-stream';
 import { PitchDetector } from 'pitchy';
 import { Buffer } from 'buffer';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { ScreenHeader } from '../components/FlowUI';
 
 export default function AfinadorScreen({ navigation }) {
   const [nota, setNota] = useState('--');
@@ -138,7 +140,8 @@ export default function AfinadorScreen({ navigation }) {
   }, []);
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container} edges={['top', 'bottom', 'left', 'right']}>
+      <ScreenHeader navigation={navigation} title="Afinador" />
       <Text style={styles.eyebrow}>OUÇA E AJUSTE</Text>
       <Text style={styles.title}>Afinador</Text>
 
@@ -187,11 +190,7 @@ export default function AfinadorScreen({ navigation }) {
         <Text style={styles.hz}>{frequencia > 0 ? `${frequencia} Hz` : '0.0 Hz'}</Text>
         <Text style={styles.instruction}>toque uma corda para começar</Text>
       </View>
-
-      <TouchableOpacity style={styles.libraryButton} onPress={() => navigation.navigate('Home')}>
-        <Text style={styles.libraryText}>Voltar para a prática</Text>
-      </TouchableOpacity>
-    </View>
+    </SafeAreaView>
   );
 }
 

@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { colors } from './FlowUI';
 
-export default function VinylRecord({ size = 150 }) {
+export default function VinylRecord({ size = 150, showSpindle = true }) {
     return (
         <View accessible={false} style={[styles.disc, { width: size, height: size, borderRadius: size / 2 }]}>
             {[0.94, 0.86, 0.78, 0.7, 0.62, 0.54].map((ratio, index) => (
@@ -10,7 +10,7 @@ export default function VinylRecord({ size = 150 }) {
             ))}
             <View style={[styles.label, { width: size * 0.4, height: size * 0.4, borderRadius: size }]}>
                 <Text style={[styles.logo, { fontSize: size * 0.155 }]}>Me</Text>
-                <View style={styles.spindle} />
+                {showSpindle && <View style={styles.spindle} />}
             </View>
         </View>
     );

@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { Animated, BackHandler, PanResponder, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { BackHandler, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFocusEffect } from '@react-navigation/native';
-import { AppTabs, colors, Eyebrow, FlowButton } from '../components/FlowUI';
+import { colors, Eyebrow, FlowButton } from '../components/FlowUI';
 import HomeTour, { tourSteps } from '../components/HomeTour';
 import MusicToolIcon from '../components/MusicToolIcon';
 import ProfileAvatar from '../components/ProfileAvatar';
@@ -11,10 +11,9 @@ import { formatDuration, practiceStats } from '../services/practiceModel';
 
 const homeGreetings = ['Hoje tem música.', 'Seu som começa aqui.', 'Vamos tirar uma nota do papel?', 'Um pouco de música muda o dia.', 'Seu próximo acorde te espera.'];
 
-export default function HomeScreen({ navigation }) {
+export default function HomeScreen({ navigation, embedded = false }) {
     const { ready, error, data } = useLocalData();
     const stats = practiceStats(data.sessions);
-    const [drawer, setDrawer] = useState(false);
     const [greeting, setGreeting] = useState(homeGreetings[0]);
     const [tour, setTour] = useState(null);
     const [rect, setRect] = useState(null);
@@ -24,51 +23,12 @@ export default function HomeScreen({ navigation }) {
     const targets = useRef({});
     const positions = useRef({});
     const autoTour = useRef(false);
-    const drawerY = useRef(new Animated.Value(0)).current;
-    const drawerOpen = useRef(false);
-    const drawerClosing = useRef(false);
-    const closeDrawer = useCallback(() => {
-        if (!drawerOpen.current || drawerClosing.current) return;
-        drawerClosing.current = true;
-        drawerY.stopAnimation();
-        Animated.timing(drawerY, { toValue: 520, duration: 190, useNativeDriver: true }).start(() => {
-            drawerOpen.current = false;
-            drawerClosing.current = false;
-            setDrawer(false);
-            drawerY.setValue(0);
-        });
-    }, [drawerY]);
-    const openDrawer = () => {
-        if (drawerOpen.current) return;
-        drawerOpen.current = true;
-        drawerClosing.current = false;
-        drawerY.setValue(520);
-        setDrawer(true);
-        requestAnimationFrame(() => Animated.spring(drawerY, { toValue: 0, damping: 23, stiffness: 240, mass: 0.8, useNativeDriver: true }).start());
-    };
-    const drawerPan = useRef(PanResponder.create({
-        onStartShouldSetPanResponder: () => false,
-        onMoveShouldSetPanResponder: (_, gesture) => gesture.dy > 6 && Math.abs(gesture.dy) > Math.abs(gesture.dx),
-        onMoveShouldSetPanResponderCapture: (_, gesture) => gesture.dy > 6 && Math.abs(gesture.dy) > Math.abs(gesture.dx),
-        onPanResponderMove: (_, gesture) => drawerY.setValue(Math.max(0, gesture.dy)),
-        onPanResponderRelease: (_, gesture) => {
-            if (gesture.dy > 85 || gesture.vy > 0.8) closeDrawer();
-            else Animated.spring(drawerY, { toValue: 0, damping: 22, stiffness: 240, useNativeDriver: true }).start();
-        },
-        onPanResponderTerminate: () => Animated.spring(drawerY, { toValue: 0, useNativeDriver: true }).start(),
-        onPanResponderTerminationRequest: () => false,
-    })).current;
     useFocusEffect(useCallback(() => {
         setGreeting((current) => {
             const alternatives = homeGreetings.filter((item) => item !== current);
             return alternatives[Math.floor(Math.random() * alternatives.length)];
         });
     }, []));
-    useEffect(() => {
-        if (!drawer) return undefined;
-        const back = BackHandler.addEventListener('hardwareBackPress', () => { closeDrawer(); return true; });
-        return () => back.remove();
-    }, [drawer, closeDrawer]);
     const closeTour = useCallback(() => {
         setTour(null);
         setRect(null);
@@ -107,18 +67,9 @@ export default function HomeScreen({ navigation }) {
         collapsable: false,
         onLayout: (event) => { positions.current[key] = event.nativeEvent.layout.y; },
     });
-    const open = (screen) => {
-        if (drawerOpen.current) {
-            drawerOpen.current = false;
-            drawerClosing.current = false;
-            drawerY.stopAnimation();
-            drawerY.setValue(0);
-            setDrawer(false);
-        }
-        navigation.navigate(screen);
-    };
+    const open = (screen) => navigation.navigate(screen);
     return (
-        <SafeAreaView ref={root} collapsable={false} style={styles.screen} edges={['top', 'left', 'right', 'bottom']} onLayout={(event) => setSize(event.nativeEvent.layout)}>
+        <SafeAreaView ref={root} collapsable={false} style={styles.screen} edges={embedded ? ['top', 'left', 'right'] : ['top', 'left', 'right', 'bottom']} onLayout={(event) => setSize(event.nativeEvent.layout)}>
             <View style={styles.main} importantForAccessibility={tour !== null ? 'no-hide-descendants' : 'auto'}>
                 <ScrollView ref={scroll} scrollEnabled={tour === null} showsVerticalScrollIndicator={false} contentContainerStyle={[styles.content, tour !== null && { paddingBottom: size.height * 0.65 }]}>
                     <View style={styles.header}>
@@ -131,12 +82,12 @@ export default function HomeScreen({ navigation }) {
                         <Text style={styles.heroTitle}>{data.active ? 'Sua prática está aqui.' : 'Dê tempo à sua música.'}</Text>
                         <Text style={styles.heroCopy}>{data.active ? 'Retome o cronômetro e salve mais um capítulo.' : 'Comece uma sessão e transforme cada minuto em evolução.'}</Text>
                         <FlowButton variant="secondary" style={styles.heroButton} disabled={!ready} onPress={() => open('Practice')}>{data.active ? 'Retomar prática  →' : 'Começar prática  →'}</FlowButton>
-                        <Pressable accessibilityRole="button" disabled={!ready} onPress={() => open('AddPractice')} style={styles.manualLink}><Text style={styles.manualText}>Já pratiquei · adicionar ao histórico</Text></Pressable>
+                        <Pressable accessibilityRole="button" disabled={!ready} onPress={() => open('AddPractice')} style={styles.manualLink}><Text style={styles.manualText}>Já pratiquei. adicionar ao histórico</Text></Pressable>
                     </View>
                     <View style={styles.stats}>
                         <View style={styles.stat}><Text style={styles.statValue}>{ready ? formatDuration(stats.totalSeconds) : '—'}</Text><Text style={styles.statLabel}>de música registrada</Text></View>
                         <View style={styles.statDivider} />
-                        <View style={styles.stat}><Text style={styles.statValue}>{ready ? stats.count : '—'}</Text><Text style={styles.statLabel}>práticas salvas</Text></View>
+                        <Pressable accessibilityRole="button" accessibilityLabel={`${stats.count} práticas salvas. Abrir progresso`} onPress={() => open('Progress')} style={styles.stat}><Text style={styles.statValue}>{ready ? stats.count : '—'}</Text><Text style={styles.statLabel}>práticas salvas</Text></Pressable>
                         <View style={styles.statDivider} />
                         <View style={styles.stat}><Text style={styles.statValue}>{ready ? stats.streak : '—'}</Text><Text style={styles.statLabel}>dias seguidos</Text></View>
                     </View>
@@ -144,7 +95,7 @@ export default function HomeScreen({ navigation }) {
                     <View {...target('record')} style={styles.recordWrap}>
                         <Pressable accessibilityRole="button" onPress={() => open('RecordVideo')} style={styles.recordCard}>
                             <View style={styles.recordIcon}><Text style={styles.recordGlyph}>●</Text></View>
-                            <View style={styles.actionCopy}><Text style={styles.cardTitle}>Gravar minha prática</Text><Text style={styles.cardCopy}>Um trecho de hoje. Uma descoberta amanhã.</Text></View>
+                            <View style={styles.actionCopy}><Text style={styles.cardTitle}>Gravar minha prática</Text><Text style={styles.cardCopy}>Um pouco hoje. Fica mais fácil amanhã.</Text></View>
                             <Text style={styles.arrow}>↗</Text>
                         </Pressable>
                     </View>
@@ -157,8 +108,8 @@ export default function HomeScreen({ navigation }) {
                     </View>
                     <Text style={styles.sectionTitle}>Antes da próxima nota</Text>
                     <View {...target('tools')} style={styles.row}>
-                        <Pressable accessibilityRole="button" style={styles.tool} onPress={() => open('Metronome')}><MusicToolIcon type="metronome" /><Text style={styles.cardTitle}>Metrônomo</Text><Text style={styles.cardCopy}>Encontre a pulsação</Text></Pressable>
-                        <Pressable accessibilityRole="button" style={styles.tool} onPress={() => open('Tuner')}><MusicToolIcon type="tuner" /><Text style={styles.cardTitle}>Afinador</Text><Text style={styles.cardCopy}>Cada nota no lugar</Text></Pressable>
+                        <Pressable accessibilityRole="button" style={styles.tool} onPress={() => open('Metronome')}><MusicToolIcon type="metronome" /><Text style={styles.cardTitle}>Metrônomo</Text><Text style={styles.cardCopy}>Tic tac tic tac</Text></Pressable>
+                        <Pressable accessibilityRole="button" style={styles.tool} onPress={() => open('Tuner')}><MusicToolIcon type="tuner" /><Text style={styles.cardTitle}>Afinador</Text><Text style={styles.cardCopy}>Cada nota no seu lugar</Text></Pressable>
                     </View>
                     <Text style={styles.sectionTitle}>Acompanhe seu caminho</Text>
                     <View {...target('progress')} style={styles.row}>
@@ -169,19 +120,7 @@ export default function HomeScreen({ navigation }) {
                         {[['Trilhas', 'Aprenda por etapas'], ['Conceitos', 'Explore os fundamentos']].map(([title, copy]) => <View key={title} style={[styles.smallCard, styles.unavailable]} accessibilityState={{ disabled: true }}><Text style={styles.soon}>EM BREVE</Text><Text style={styles.cardTitle}>{title}</Text><Text style={styles.cardCopy}>{copy}</Text></View>)}
                     </View>
                 </ScrollView>
-                <AppTabs navigation={navigation} active="Home" onAdd={openDrawer} />
             </View>
-            {drawer && <Pressable style={styles.drawerOverlay} onPress={closeDrawer} accessibilityRole="button" accessibilityLabel="Fechar ações">
-                <Animated.View {...drawerPan.panHandlers} style={[styles.drawer, { transform: [{ translateY: drawerY }] }]}>
-                    <Pressable onPress={(event) => event.stopPropagation()} style={styles.drawerSurface}>
-                        <View style={styles.dragHandle} accessibilityElementsHidden />
-                        <View style={styles.drawerHeader}><Text style={styles.sectionTitle}>Mais música, do seu jeito</Text><Pressable onPress={closeDrawer} accessibilityLabel="Fechar" style={styles.close}><Text style={styles.arrow}>×</Text></Pressable></View>
-                        <FlowButton onPress={() => open('Practice')}>Começar uma prática</FlowButton>
-                        <FlowButton variant="secondary" onPress={() => open('AddPractice')}>Registrar uma prática anterior</FlowButton>
-                        <FlowButton variant="secondary" onPress={() => open('RecordVideo')}>Gravar vídeo</FlowButton>
-                    </Pressable>
-                </Animated.View>
-            </Pressable>}
             {tour !== null && <HomeTour step={tour} rect={rect} size={size} onNext={() => setTour((current) => current + 1)} onSkip={closeTour} onSupport={() => { closeTour(); navigation.navigate('Support'); }} />}
         </SafeAreaView>
     );
@@ -204,9 +143,4 @@ const styles = StyleSheet.create({
     smallCard: { flex: 1, padding: 16, borderWidth: 1, borderColor: colors.border, borderRadius: 18, backgroundColor: colors.white }, smallIcon: { color: colors.brown, fontSize: 25 },
     unavailable: { opacity: 0.45 }, soon: { color: colors.muted, fontSize: 9, fontWeight: '700', letterSpacing: 1 },
     notice: { backgroundColor: '#F7E1D6', padding: 12, borderRadius: 12, marginBottom: 14 }, noticeText: { color: colors.brown, fontSize: 12 },
-    drawerOverlay: { position: 'absolute', top: 0, right: 0, bottom: 0, left: 0, width: '100%', height: '100%', zIndex: 30, elevation: 30, justifyContent: 'flex-end', backgroundColor: 'rgba(22,17,13,0.55)' },
-    drawer: { zIndex: 2, elevation: 12 },
-    drawerSurface: { padding: 24, paddingBottom: 36, backgroundColor: colors.background, borderTopLeftRadius: 24, borderTopRightRadius: 24, gap: 12 },
-    dragHandle: { width: 48, height: 5, borderRadius: 3, backgroundColor: colors.border, alignSelf: 'center', marginTop: -10, marginBottom: 2 },
-    drawerHeader: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }, close: { padding: 10 },
 });

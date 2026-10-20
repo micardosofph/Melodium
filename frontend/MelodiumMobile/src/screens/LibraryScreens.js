@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import ComingSoonPopup from '../components/ComingSoonPopup';
 import {
-    AppTabs,
     BodyText,
     colors,
     Eyebrow,
     FlowScreen,
     Heading,
+    ScreenHeader,
 } from '../components/FlowUI';
 
 const learningPaths = [
@@ -29,6 +29,7 @@ export function PathsScreen({ navigation }) {
     return (
         <View style={styles.screen}>
             <FlowScreen contentStyle={styles.content}>
+                <ScreenHeader navigation={navigation} title="Trilhas" />
                 <Eyebrow>APRENDA POR ETAPAS</Eyebrow>
                 <Heading>Trilhas</Heading>
                 <BodyText style={styles.subtitle}>Escolha um caminho e avance no seu ritmo.</BodyText>
@@ -53,7 +54,6 @@ export function PathsScreen({ navigation }) {
                     <Text style={styles.linkText}>Explorar conceitos musicais</Text><Text style={styles.rowArrow}>›</Text>
                 </Pressable>
             </FlowScreen>
-            <AppTabs navigation={navigation} />
             <ComingSoonPopup visible={comingSoonVisible} onClose={() => setComingSoonVisible(false)} />
         </View>
     );
@@ -65,10 +65,8 @@ export function ConceptsScreen({ navigation }) {
     return (
         <View style={styles.screen}>
             <FlowScreen contentStyle={styles.content}>
-                <View style={styles.headingRow}>
-                    <View><Eyebrow>CONSULTE FUNDAMENTOS</Eyebrow><Heading>Conceitos musicais</Heading></View>
-                    <Pressable onPress={() => navigation.goBack()}><Text style={styles.back}>×</Text></Pressable>
-                </View>
+                <ScreenHeader navigation={navigation} title="Conceitos" />
+                <Eyebrow>CONSULTE FUNDAMENTOS</Eyebrow><Heading>Conceitos musicais</Heading>
                 <BodyText style={styles.subtitle}>Fundamentos para acompanhar sua jornada.</BodyText>
                 <View style={styles.conceptList}>
                     {concepts.map((concept) => (
@@ -83,7 +81,6 @@ export function ConceptsScreen({ navigation }) {
                     <Text style={styles.linkText}>Ver trilhas de aprendizado</Text><Text style={styles.rowArrow}>›</Text>
                 </Pressable>
             </FlowScreen>
-            <AppTabs navigation={navigation} />
             <ComingSoonPopup visible={comingSoonVisible} onClose={() => setComingSoonVisible(false)} />
         </View>
     );
@@ -112,8 +109,6 @@ const styles = StyleSheet.create({
     rowArrow: { color: colors.muted, fontSize: 24, marginLeft: 12 },
     linkRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', minHeight: 50, marginTop: 8, paddingHorizontal: 5 },
     linkText: { color: colors.brown, fontSize: 13, fontWeight: '700' },
-    headingRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-    back: { color: colors.brown, fontSize: 30, lineHeight: 34 },
     conceptList: { gap: 10 },
     conceptRow: { flexDirection: 'row', alignItems: 'center', backgroundColor: colors.white, borderWidth: 1, borderColor: colors.border, borderRadius: 10, padding: 13 },
     conceptIcon: { width: 45, height: 45, borderRadius: 12, alignItems: 'center', justifyContent: 'center' },

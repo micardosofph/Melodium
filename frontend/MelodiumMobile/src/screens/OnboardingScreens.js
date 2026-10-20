@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Alert, Pressable, StyleSheet, Text, View } from 'react-native';
 import VinylRecord from '../components/VinylRecord';
-import { BodyText, BrandMark, colors, Eyebrow, FlowButton, FlowField, FlowScreen, Heading } from '../components/FlowUI';
+import { BodyText, BrandMark, colors, Eyebrow, FlowButton, FlowField, FlowScreen, Heading, ScreenHeader } from '../components/FlowUI';
 import { localData, useLocalData } from '../services/localData';
 import { cancelDailyReminder, scheduleDailyReminder } from '../services/dailyReminder';
 import { formatReminderTime } from '../services/reminderModel';
@@ -23,7 +23,7 @@ export function LaunchScreen({ navigation }) {
     }, [ready, data.onboardingSeen, data.profileName, navigation]);
     return <FlowScreen scroll={false} contentStyle={styles.launchContent}>
         <BrandMark />
-        <View style={styles.launchCenter}><VinylRecord size={112} /><BodyText style={styles.launchText}>{error || 'Preparando seu espaço musical…'}</BodyText></View>
+        <View style={styles.launchCenter}><VinylRecord size={112} showSpindle={false} /><BodyText style={styles.launchText}>{error || 'Preparando seu espaço musical…'}</BodyText></View>
         {error && <FlowButton onPress={() => localData.load().catch(() => {})}>Tentar novamente</FlowButton>}
     </FlowScreen>;
 }
@@ -81,7 +81,7 @@ export function NameScreen({ navigation, route }) {
         finally { setBusy(false); }
     };
     return <FlowScreen contentStyle={styles.nameContent}>
-        <BrandMark compact />
+        {editing ? <ScreenHeader navigation={navigation} title="Editar nome" /> : <BrandMark compact />}
         <View style={styles.nameHero}>
             <View style={styles.nameAvatar}><Text style={styles.nameAvatarText}>Me</Text></View>
             <Eyebrow style={styles.centered}>{editing ? 'SEU PERFIL' : 'ANTES DA PRIMEIRA NOTA'}</Eyebrow>
@@ -137,7 +137,7 @@ export function ReminderScreen({ navigation, route }) {
     };
     const setPreset = (nextHour) => { setHour(nextHour); setMinute(0); };
     return <FlowScreen contentStyle={styles.reminderContent}>
-        <BrandMark compact />
+        {editing ? <ScreenHeader navigation={navigation} title="Lembrete diário" /> : <BrandMark compact />}
         <View style={styles.reminderHero}><View style={styles.reminderBell}><Text style={styles.reminderBellGlyph}>♪</Text></View>
             <Eyebrow style={styles.centered}>{editing ? 'SEU LEMBRETE' : 'UM EMPURRÃOZINHO MUSICAL'}</Eyebrow>
             <Heading style={styles.reminderTitle}>{editing ? 'Qual é o melhor horário?' : 'Quando a música chama?'}</Heading>

@@ -9,7 +9,6 @@ import {
     Image,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { openDiaryTab, openHomeTab } from '../services/tabNavigation';
 
 export const colors = {
     background: '#F7F9F4',
@@ -105,18 +104,39 @@ export function FlowField({ label, style, ...inputProps }) {
     );
 }
 
-export function AppTabs({ navigation, active = 'Home', onAdd }) {
-    const goHome = () => openHomeTab(navigation, active);
-    const goDiary = () => openDiaryTab(navigation, active);
+export function ScreenHeader({ navigation, title, right = null, light = false, style }) {
+    const goBack = () => {
+        if (navigation.canGoBack?.()) navigation.goBack();
+        else navigation.navigate('Home');
+    };
+
+    return (
+        <View style={[styles.screenHeader, style]}>
+            <Pressable
+                accessibilityRole="button"
+                accessibilityLabel="Voltar"
+                hitSlop={8}
+                onPress={goBack}
+                style={styles.screenHeaderSide}
+            >
+                <Text style={[styles.screenHeaderBack, light && styles.screenHeaderLight]}>‹</Text>
+            </Pressable>
+            <Text numberOfLines={1} style={[styles.screenHeaderTitle, light && styles.screenHeaderLight]}>{title}</Text>
+            <View style={styles.screenHeaderSide}>{right}</View>
+        </View>
+    );
+}
+
+export function AppTabs({ active = 'Home', onAdd, onHome, onDiary }) {
     return (
         <View style={styles.tabBar}>
-            <Pressable accessibilityRole="button" onPress={goHome} style={styles.tabItem}>
+            <Pressable accessibilityRole="button" onPress={onHome} style={styles.tabItem}>
                 <Text style={[styles.tabLabel, active === 'Home' && styles.tabActive]}>Home</Text>
             </Pressable>
-            <Pressable accessibilityRole="button" onPress={onAdd || (() => navigation.navigate('AddPractice'))} style={styles.addTab}>
+            <Pressable accessibilityRole="button" onPress={onAdd} style={styles.addTab}>
                 <Text style={styles.addTabText}>+</Text>
             </Pressable>
-            <Pressable accessibilityRole="button" onPress={goDiary} style={styles.tabItem}>
+            <Pressable accessibilityRole="button" onPress={onDiary} style={styles.tabItem}>
                 <Text style={[styles.tabLabel, active === 'Social' && styles.tabActive]}>Diário</Text>
             </Pressable>
         </View>
@@ -171,6 +191,28 @@ const styles = StyleSheet.create({
         fontSize: 16,
         paddingHorizontal: 16,
     },
+    screenHeader: {
+        minHeight: 48,
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 18,
+    },
+    screenHeaderSide: {
+        width: 48,
+        minHeight: 48,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    screenHeaderBack: { color: colors.brown, fontSize: 36, lineHeight: 40 },
+    screenHeaderTitle: {
+        flex: 1,
+        color: colors.brown,
+        fontSize: 16,
+        lineHeight: 22,
+        fontWeight: '800',
+        textAlign: 'center',
+    },
+    screenHeaderLight: { color: colors.white },
     tabBar: {
         minHeight: 76,
         paddingHorizontal: 40,

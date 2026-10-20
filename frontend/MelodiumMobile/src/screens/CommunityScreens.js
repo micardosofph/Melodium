@@ -2,26 +2,26 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Alert, Image, Modal, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import {
-    AppTabs,
     BodyText,
     colors,
     Eyebrow,
     FlowButton,
     FlowScreen,
     Heading,
+    ScreenHeader,
 } from '../components/FlowUI';
 import ProfileAvatar from '../components/ProfileAvatar';
 import { localData, useLocalData } from '../services/localData';
 import { formatDuration, practiceStats } from '../services/practiceModel';
-import { pickProfilePhoto, removeStoredProfilePhoto } from '../services/profilePhoto';
+import { pickProfilePhoto, removeStoredProfilePhoto, takeProfilePhoto } from '../services/profilePhoto';
 import { formatReminderTime } from '../services/reminderModel';
-import { pickDiaryPhoto, removeDiaryPhoto } from '../services/diaryPhoto';
+import { pickDiaryPhoto, removeDiaryPhoto, takeDiaryPhoto } from '../services/diaryPhoto';
 
 function diaryDate(value) {
     return new Date(value).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' });
 }
 
-export function SocialScreen({ navigation }) {
+export function SocialScreen({ navigation, embedded = false }) {
     const { data } = useLocalData();
     const removeEntry = (entry) => Alert.alert('Apagar esta nota?', 'A nota e a foto guardada nela serão removidas deste aparelho.', [
         { text: 'Cancelar', style: 'cancel' },
@@ -32,7 +32,7 @@ export function SocialScreen({ navigation }) {
     ]);
 
     return (
-        <SafeAreaView style={styles.screen} edges={['top', 'left', 'right', 'bottom']}>
+        <SafeAreaView style={styles.screen} edges={embedded ? ['top', 'left', 'right'] : ['top', 'left', 'right', 'bottom']}>
             <ScrollView contentContainerStyle={styles.feedContent} showsVerticalScrollIndicator={false}>
                 <View style={styles.header}>
                     <View>
@@ -43,7 +43,7 @@ export function SocialScreen({ navigation }) {
                         <ProfileAvatar uri={data.profilePhotoUri} size={44} />
                     </Pressable>
                 </View>
-                <BodyText style={styles.intro}>Registre descobertas, dificuldades e pequenas vitórias. Tudo fica somente neste aparelho.</BodyText>
+                <BodyText style={styles.intro}>Registre descobertas, dificuldades e pequenas vitórias. Você não vai se arrepender de anotar isso.</BodyText>
 
                 <Pressable style={styles.compose} onPress={() => navigation.navigate('DiaryEntry')}>
                     <ProfileAvatar uri={data.profilePhotoUri} size={36} />
@@ -71,7 +71,6 @@ export function SocialScreen({ navigation }) {
                         </View>
                 ))}
             </ScrollView>
-            <AppTabs navigation={navigation} active="Social" />
         </SafeAreaView>
     );
 }
@@ -84,14 +83,25 @@ export function DiaryEntryScreen({ navigation }) {
     const saved = useRef(false);
     useEffect(() => { photoRef.current = photoUri; }, [photoUri]);
     useEffect(() => () => { if (!saved.current) removeDiaryPhoto(photoRef.current); }, []);
-    const choosePhoto = async () => {
+    const choosePhoto = async (source) => {
         try {
-            const nextUri = await pickDiaryPhoto();
+            const nextUri = source === 'camera' ? await takeDiaryPhoto() : await pickDiaryPhoto();
             if (!nextUri) return;
             removeDiaryPhoto(photoUri);
             setPhotoUri(nextUri);
-        } catch { Alert.alert('Não foi possível escolher a foto', 'Tente novamente com outra imagem.'); }
+        } catch (error) {
+            if (error.code === 'CAMERA_PERMISSION_DENIED') {
+                Alert.alert('Acesso à câmera necessário', error.message);
+                return;
+            }
+            Alert.alert('Não foi possível adicionar a foto', 'Tente novamente com outra imagem.');
+        }
     };
+    const openPhotoActions = () => Alert.alert(photoUri ? 'Trocar foto' : 'Adicionar foto', 'Como você quer adicionar a imagem?', [
+        { text: 'Tirar foto', onPress: () => choosePhoto('camera') },
+        { text: 'Escolher da galeria', onPress: () => choosePhoto('library') },
+        { text: 'Cancelar', style: 'cancel' },
+    ]);
     const save = async () => {
         if (busy) return;
         setBusy(true);
@@ -103,13 +113,13 @@ export function DiaryEntryScreen({ navigation }) {
         finally { setBusy(false); }
     };
     return <FlowScreen contentStyle={styles.entryContent}>
-        <View style={styles.profileHeader}><Pressable accessibilityRole="button" accessibilityLabel="Voltar" onPress={() => navigation.goBack()}><Text style={styles.back}>‹</Text></Pressable><Text style={styles.entryTopLabel}>NOVA NOTA</Text><View style={{ width: 34 }} /></View>
+        <ScreenHeader navigation={navigation} title="Nova nota" />
         <Eyebrow style={styles.entryEyebrow}>DIÁRIO DE EVOLUÇÃO</Eyebrow>
         <Heading>O que a música te ensinou hoje?</Heading>
         <BodyText style={styles.entryIntro}>Pode ser uma conquista, uma dificuldade ou só uma sensação que você quer guardar.</BodyText>
         <TextInput multiline maxLength={600} value={text} onChangeText={setText} placeholder="Ex.: Hoje consegui trocar os acordes sem parar pela primeira vez..." placeholderTextColor={colors.soft} selectionColor={colors.brown} textAlignVertical="top" style={styles.diaryInput} />
         {photoUri ? <View style={styles.photoPreviewWrap}><Image source={{ uri: photoUri }} style={styles.photoPreview} /><Pressable accessibilityRole="button" onPress={() => { removeDiaryPhoto(photoUri); setPhotoUri(null); }} style={styles.removePhoto}><Text style={styles.removePhotoText}>Remover foto</Text></Pressable></View> : null}
-        <FlowButton variant="secondary" onPress={choosePhoto}>{photoUri ? 'Trocar foto' : 'Adicionar uma foto · opcional'}</FlowButton>
+        <FlowButton variant="secondary" onPress={openPhotoActions}>{photoUri ? 'Trocar foto' : 'Adicionar uma foto · opcional'}</FlowButton>
         <FlowButton disabled={busy || !text.trim()} onPress={save} style={styles.saveEntry}>{busy ? 'Salvando...' : 'Guardar no meu diário'}</FlowButton>
     </FlowScreen>;
 }
@@ -120,18 +130,22 @@ export function UserScreen({ navigation }) {
 
     const { data, ready } = useLocalData();
     const stats = practiceStats(data.sessions);
-    const choosePhoto = async () => {
+    const choosePhoto = async (source) => {
         if (photoBusy) return;
         setPhotoBusy(true);
         let nextUri;
         try {
-            nextUri = await pickProfilePhoto();
+            nextUri = source === 'camera' ? await takeProfilePhoto() : await pickProfilePhoto();
             if (!nextUri) return;
             const previousUri = data.profilePhotoUri;
             await localData.setProfilePhoto(nextUri);
             removeStoredProfilePhoto(previousUri);
         } catch (error) {
             removeStoredProfilePhoto(nextUri);
+            if (error.code === 'CAMERA_PERMISSION_DENIED') {
+                Alert.alert('Acesso à câmera necessário', error.message);
+                return;
+            }
             Alert.alert('Não foi possível trocar a foto', 'Escolha outra imagem e tente novamente.');
         } finally { setPhotoBusy(false); }
     };
@@ -143,22 +157,27 @@ export function UserScreen({ navigation }) {
             catch { Alert.alert('Não foi possível remover a foto', 'Tente novamente.'); }
         } },
     ]);
-    const openPhotoActions = () => Alert.alert('Foto de perfil', 'Esta imagem fica somente neste aparelho.', [
-        { text: 'Escolher da galeria', onPress: choosePhoto },
-        ...(data.profilePhotoUri ? [{ text: 'Remover foto', style: 'destructive', onPress: removePhoto }] : []),
+    const openPhotoSourceActions = () => Alert.alert('Foto de perfil', 'Como você quer adicionar a imagem?', [
+        { text: 'Tirar foto', onPress: () => choosePhoto('camera') },
+        { text: 'Escolher da galeria', onPress: () => choosePhoto('library') },
         { text: 'Cancelar', style: 'cancel' },
     ]);
+    const openPhotoActions = () => data.profilePhotoUri
+        ? Alert.alert('Foto de perfil', 'Esta imagem fica somente neste aparelho.', [
+            { text: 'Trocar foto', onPress: openPhotoSourceActions },
+            { text: 'Remover foto', style: 'destructive', onPress: removePhoto },
+            { text: 'Cancelar', style: 'cancel' },
+        ])
+        : openPhotoSourceActions();
 
     return (
         <View style={styles.screen}>
             <FlowScreen contentStyle={styles.profileContent}>
-                <View style={styles.profileHeader}>
-                    <Pressable onPress={() => navigation.goBack()}><Text style={styles.back}>‹</Text></Pressable>
-                    <Heading style={styles.profileHeading}>Perfil</Heading>
-                    <Pressable accessibilityRole="button" accessibilityLabel="Mais opções do perfil" onPress={() => setMenuVisible(true)} style={styles.menuTrigger}>
-                        <Text style={styles.more}>···</Text>
-                    </Pressable>
-                </View>
+                <ScreenHeader
+                    navigation={navigation}
+                    title="Perfil"
+                    right={<Pressable accessibilityRole="button" accessibilityLabel="Mais opções do perfil" onPress={() => setMenuVisible(true)} style={styles.menuTrigger}><Text style={styles.more}>···</Text></Pressable>}
+                />
                 <View style={styles.profileHero}>
                     <Pressable accessibilityRole="button" accessibilityLabel="Trocar foto de perfil" disabled={photoBusy} onPress={openPhotoActions} style={photoBusy && { opacity: 0.55 }}>
                         <ProfileAvatar uri={data.profilePhotoUri} size={96} />
@@ -167,11 +186,10 @@ export function UserScreen({ navigation }) {
                     <Pressable accessibilityRole="button" onPress={openPhotoActions} disabled={photoBusy}><Text style={styles.changePhoto}>{photoBusy ? 'Salvando foto...' : 'Trocar foto'}</Text></Pressable>
                     <Heading style={styles.name}>{data.profileName || 'Musicista'}</Heading>
                     <Pressable accessibilityRole="button" onPress={() => navigation.navigate('Name', { editing: true })}><Text style={styles.editName}>Editar nome</Text></Pressable>
-                    <Text style={styles.handle}>Sua música, neste aparelho</Text>
                     <BodyText style={styles.bio}>Música faz parte do meu dia.</BodyText>
                 </View>
                 <View style={styles.stats}>
-                    <View style={styles.stat}><Text style={styles.statValue}>{ready ? stats.count : '—'}</Text><Text style={styles.statLabel}>práticas</Text></View>
+                    <Pressable accessibilityRole="button" accessibilityLabel={`${stats.count} práticas. Abrir progresso`} onPress={() => navigation.navigate('Progress')} style={styles.stat}><Text style={styles.statValue}>{ready ? stats.count : '—'}</Text><Text style={styles.statLabel}>práticas</Text></Pressable>
                     <View style={styles.stat}><Text style={styles.statValue}>{ready ? formatDuration(stats.totalSeconds) : '—'}</Text><Text style={styles.statLabel}>praticados</Text></View>
                     <View style={styles.stat}><Text style={styles.statValue}>{ready ? stats.streak : '—'}</Text><Text style={styles.statLabel}>dias seguidos</Text></View>
                 </View>
@@ -207,8 +225,8 @@ export function UserScreen({ navigation }) {
                 <Pressable style={styles.menuRoot} onPress={() => setMenuVisible(false)}>
                     <Pressable style={styles.menuPanel} onPress={(event) => event.stopPropagation()}>
                         <View style={[styles.menuOption, { maxWidth: 280, paddingVertical: 16, gap: 8 }]}>
-                            <Text style={styles.menuOptionText}>Erro 4/4 encontrado. 🥁</Text>
-                            <BodyText style={{ fontSize: 13, lineHeight: 19 }}>Esta opção entrou numa pausa dramática. Conte “um, dois, três, quatro” e finja que foi intencional.</BodyText>
+                            <Text style={styles.menuOptionText}>Erro 4/4 encontrado.</Text>
+                            <BodyText style={{ fontSize: 13, lineHeight: 19 }}>Ops, ainda não temos o que colocar nessa seção, finja que você não viu nada. 🤫</BodyText>
                         </View>
                     </Pressable>
                 </Pressable>

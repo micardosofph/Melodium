@@ -3,6 +3,7 @@ node_modules/
 
 # Expo local output
 .expo/
+.expo-export-check/
 dist/
 web-build/
 expo-env.d.ts

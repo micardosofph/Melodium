@@ -3,7 +3,7 @@ import { Alert, AppState, Linking, Pressable, StyleSheet, Text, TextInput, View 
 import { useFocusEffect, useIsFocused, usePreventRemove } from '@react-navigation/native';
 import { CameraView, useCameraPermissions, useMicrophonePermissions } from 'expo-camera';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { BodyText, colors, Eyebrow, FlowButton, FlowField, FlowScreen, Heading } from '../components/FlowUI';
+import { BodyText, colors, Eyebrow, FlowButton, FlowField, FlowScreen, Heading, ScreenHeader } from '../components/FlowUI';
 import MusicToolIcon from '../components/MusicToolIcon';
 import { saveEvolutionVideo } from '../services/evolutionVideos';
 import { localData, useLocalData } from '../services/localData';
@@ -34,10 +34,6 @@ function useSaveAction() {
     return [busy, run];
 }
 
-function BackRow({ navigation, title }) {
-    return <View style={styles.topRow}><Pressable accessibilityRole="button" accessibilityLabel="Voltar" onPress={() => navigation.goBack()}><Text style={styles.back}>‹</Text></Pressable><Text style={styles.topLabel}>{title}</Text><View style={styles.topSpacer} /></View>;
-}
-
 export function PracticeScreen({ navigation }) {
     const { ready, data, seconds, running, error } = usePracticeClock();
     const [busy, run] = useSaveAction();
@@ -47,7 +43,7 @@ export function PracticeScreen({ navigation }) {
     });
     return <SafeAreaView style={styles.practiceFullScreen} edges={['top', 'bottom', 'left', 'right']}>
         <View style={styles.practiceInner}>
-            <BackRow navigation={navigation} title="PRÁTICA ATUAL" />
+            <ScreenHeader navigation={navigation} title="Prática atual" />
             <View style={styles.practiceIntro}><Eyebrow>VAMOS TOCAR</Eyebrow><Heading>Sua prática</Heading><BodyText style={styles.practiceSubtitle}>Este tempo é só seu.</BodyText></View>
             {error && <BodyText>{error}</BodyText>}
             <View style={styles.liveTimer}>
@@ -103,7 +99,7 @@ export function AddPracticeScreen({ navigation }) {
         navigation.reset({ index: 0, routes: [{ name: 'Home' }] });
     });
     return <FlowScreen contentStyle={styles.addContent}>
-        <BackRow navigation={navigation} title="NOVA ATIVIDADE" />
+        <ScreenHeader navigation={navigation} title="Nova atividade" />
         <Eyebrow style={styles.addEyebrow}>SEU HISTÓRICO</Eyebrow><Heading>Adicionar prática</Heading>
         <BodyText style={styles.addSubtitle}>Registre uma sessão que já aconteceu hoje.</BodyText>
         <View style={styles.addFields}>
@@ -125,7 +121,7 @@ export function RecordPracticeScreen({ navigation }) {
         navigation.reset({ index: 0, routes: [{ name: 'Home' }] });
     });
     return <FlowScreen contentStyle={styles.recordContent}>
-        <BackRow navigation={navigation} title="REGISTRAR PRÁTICA" />
+        <ScreenHeader navigation={navigation} title="Registrar prática" />
         <Eyebrow style={styles.recordEyebrow}>MUITO BEM</Eyebrow><Heading>Sua sessão</Heading>
         <BodyText style={styles.recordSubtitle}>Dê um nome a esse passo na sua evolução.</BodyText>
         <View style={[styles.timerCard, { marginBottom: 22 }]}><Text style={styles.timerLabel}>TEMPO DE PRÁTICA</Text><Text style={styles.timerValue}>{formatTime(seconds)}</Text></View>
@@ -225,7 +221,7 @@ export function RecordVideoScreen({ navigation }) {
     };
     const permissionsGranted = cameraPermission?.granted && microphonePermission?.granted;
     return <FlowScreen contentStyle={styles.videoContent}>
-        <BackRow navigation={navigation} title="REGISTRE SUA EVOLUÇÃO" />
+        <ScreenHeader navigation={navigation} title="Registrar evolução" />
         <Eyebrow style={styles.videoEyebrow}>UM NOVO REGISTRO</Eyebrow><Heading>{pendingVideoUri ? 'Dê nome ao momento.' : 'Sua música em vídeo.'}</Heading>
         <BodyText style={styles.videoSubtitle}>{pendingVideoUri ? 'Escolha como este vídeo aparece na sua galeria Melodium.' : 'Grave até 90 segundos. Depois, escolha um nome e salve.'}</BodyText>
         {pendingVideoUri ? <View style={{ marginTop: 24, padding: 20, borderRadius: 20, backgroundColor: colors.paleGreen }}>
@@ -251,10 +247,6 @@ const styles = StyleSheet.create({
     screen: { flex: 1, backgroundColor: colors.background },
     practiceFullScreen: { flex: 1, backgroundColor: colors.green },
     practiceInner: { flex: 1, paddingHorizontal: 22, paddingTop: 12, paddingBottom: 14 },
-    topRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', minHeight: 32 },
-    back: { color: colors.brown, fontSize: 32, lineHeight: 34, width: 38 },
-    topLabel: { color: colors.muted, fontSize: 10, fontWeight: '700', letterSpacing: 1.1 },
-    topSpacer: { width: 38 },
     practiceIntro: { marginTop: 20 },
     practiceSubtitle: { marginTop: 4, color: colors.brown },
     liveTimer: { flex: 1, minHeight: 180, alignItems: 'center', justifyContent: 'center' },

@@ -1,6 +1,6 @@
 import React from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { BodyText, colors, Eyebrow, FlowButton, FlowScreen, Heading } from '../components/FlowUI';
+import { StyleSheet, Text, View } from 'react-native';
+import { BodyText, colors, Eyebrow, FlowButton, FlowScreen, Heading, ScreenHeader } from '../components/FlowUI';
 import { localData, useLocalData } from '../services/localData';
 import { formatDuration, practiceStats } from '../services/practiceModel';
 
@@ -10,7 +10,7 @@ export default function ProgressScreen({ navigation }) {
     const max = Math.max(60, ...stats.days.map((day) => day.seconds));
     return (
         <FlowScreen>
-            <Pressable accessibilityRole="button" accessibilityLabel="Voltar" onPress={() => navigation.goBack()} style={styles.back}><Text style={styles.backText}>‹</Text></Pressable>
+            <ScreenHeader navigation={navigation} title="Progresso" />
             <Eyebrow>UM POUCO A CADA DIA</Eyebrow>
             <Heading>Sua evolução</Heading>
             <BodyText style={styles.subtitle}>Tempo que virou música.</BodyText>
@@ -45,7 +45,6 @@ export default function ProgressScreen({ navigation }) {
     );
 }
 const styles = StyleSheet.create({
-    back: { minHeight: 40, width: 44, justifyContent: 'center', marginBottom: 12 }, backText: { fontSize: 32, color: colors.brown },
     subtitle: { marginTop: 6, marginBottom: 22 }, hero: { backgroundColor: colors.brown, padding: 24, borderRadius: 24 },
     heroLabel: { color: colors.green, fontSize: 10, fontWeight: '700', letterSpacing: 1 }, total: { color: colors.white, fontSize: 38, fontWeight: '700', marginVertical: 10 },
     heroCaption: { color: '#E1D5CA', fontSize: 12 }, row: { flexDirection: 'row', gap: 12, marginTop: 12 },

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Alert, Linking, Pressable, StyleSheet, Text, View } from 'react-native';
-import { BodyText, colors, Eyebrow, FlowScreen, Heading } from '../components/FlowUI';
+import { BodyText, colors, Eyebrow, FlowScreen, ScreenHeader } from '../components/FlowUI';
 
 const SUPPORT_EMAIL = 'melodium.contato@gmail.com';
 const SUPPORT_INSTAGRAM = '@melodiumsoqbemol';
@@ -16,15 +16,8 @@ async function openLink(url) {
 export function SupportScreen({ navigation }) {
     return (
         <FlowScreen contentStyle={styles.content}>
-            <View style={styles.header}>
-                <Pressable accessibilityRole="button" onPress={() => navigation.goBack()} style={styles.backButton}>
-                    <Text style={styles.backGlyph}>‹</Text>
-                </Pressable>
-                <View style={styles.headerCopy}>
-                    <Eyebrow>ESTAMOS AQUI</Eyebrow>
-                    <Heading style={styles.heading}>Ajuda e suporte</Heading>
-                </View>
-            </View>
+            <ScreenHeader navigation={navigation} title="Ajuda e suporte" />
+            <Eyebrow>ESTAMOS AQUI</Eyebrow>
             <BodyText style={styles.intro}>Fale com a equipe Melodium. Vamos ajudar você.</BodyText>
 
             <Pressable accessibilityRole="link" onPress={() => openLink(`mailto:${SUPPORT_EMAIL}`)} style={styles.contactRow}>
@@ -44,6 +37,11 @@ export function SupportScreen({ navigation }) {
                 <Text style={styles.arrow}>↗</Text>
             </Pressable>
 
+            <View style={styles.bugNotice}>
+                <Text style={styles.bugTitle}>Encontrou algum bug?</Text>
+                <BodyText style={styles.bugText}>Avise a gente pelo e-mail ou Instagram acima. Seu relato ajuda a deixar o Melodium cada vez melhor.</BodyText>
+            </View>
+
             <View style={styles.note}>
                 <Eyebrow>CONTA COM A GENTE</Eyebrow>
                 <Text style={styles.noteTitle}>Sua música importa.</Text>
@@ -54,11 +52,6 @@ export function SupportScreen({ navigation }) {
 
 const styles = StyleSheet.create({
     content: { paddingTop: 18, paddingBottom: 30 },
-    header: { flexDirection: 'row', alignItems: 'center' },
-    backButton: { width: 38, height: 44, justifyContent: 'center' },
-    backGlyph: { color: colors.brown, fontSize: 34, lineHeight: 38 },
-    headerCopy: { flex: 1, marginLeft: 4 },
-    heading: { fontSize: 27, lineHeight: 33 },
     intro: { fontSize: 14, lineHeight: 21, marginTop: 10, marginBottom: 22 },
     contactRow: { minHeight: 78, flexDirection: 'row', alignItems: 'center', paddingHorizontal: 14, paddingVertical: 12, backgroundColor: colors.white, borderWidth: 1, borderColor: colors.border, borderRadius: 10, marginBottom: 11 },
     contactIcon: { width: 42, height: 42, borderRadius: 11, backgroundColor: colors.green, alignItems: 'center', justifyContent: 'center' },
@@ -68,6 +61,9 @@ const styles = StyleSheet.create({
     contactLabel: { color: colors.muted, fontSize: 11 },
     contactValue: { color: colors.brown, fontSize: 13, fontWeight: '700', marginTop: 4 },
     arrow: { color: colors.muted, fontSize: 18, marginLeft: 8 },
+    bugNotice: { padding: 16, backgroundColor: '#F7EDE5', borderWidth: 1, borderColor: '#E9D7C9', borderRadius: 10, marginTop: 7 },
+    bugTitle: { color: colors.brown, fontSize: 15, fontWeight: '700' },
+    bugText: { fontSize: 13, lineHeight: 19, marginTop: 5 },
     note: { padding: 18, backgroundColor: colors.paleGreen, borderRadius: 10, marginTop: 18, marginBottom: 22 },
     noteTitle: { color: colors.brown, fontSize: 19, fontWeight: '700', marginTop: 6 },
     noteBody: { fontSize: 13, lineHeight: 19, marginTop: 6 },

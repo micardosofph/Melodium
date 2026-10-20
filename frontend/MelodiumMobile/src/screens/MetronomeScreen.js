@@ -3,6 +3,8 @@ import { View, Text, StyleSheet, TouchableOpacity, Vibration, Modal, ScrollView 
 import { SafeAreaView } from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createAudioPlayer, preload, setAudioModeAsync } from 'expo-audio';
+import { ScreenHeader } from '../components/FlowUI';
+import { metronomeVibrationPattern, replayMetronomePlayer } from '../services/metronomeModel';
 
 const MIN_BPM = 40;
 const MAX_BPM = 260;
@@ -11,7 +13,6 @@ const MAX_BEATS = 12;
 const STORAGE_KEY = '@melodium/metronome_preferences';
 const AVAILABLE_TIME_SIGNATURES = ['2/4', '3/4', '4/4', '6/8', '12/8'];
 const CLICK_PACK_NAME = 'click';
-const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
 const SOUND_PATHS = {
     [CLICK_PACK_NAME]: {
         hi: require('../../assets/sounds/metronome/flClickHi.wav'),
@@ -19,7 +20,7 @@ const SOUND_PATHS = {
     },
 };
 
-export default function MetronomoScreen() {
+export default function MetronomoScreen({ navigation }) {
     const [bpm, setBpm] = useState(100);
     const [timeSignature, setTimeSignature] = useState('4/4');
     const [beatsPerBar, setBeatsPerBar] = useState(4);
@@ -28,6 +29,8 @@ export default function MetronomoScreen() {
     const [currentBeatNumber, setCurrentBeatNumber] = useState(1);
     const [isConfigVisible, setIsConfigVisible] = useState(false);
     const [activeMode, setActiveMode] = useState('click');
+    const [soundReady, setSoundReady] = useState(false);
+    const [soundError, setSoundError] = useState(false);
 
     const timeoutRef = useRef(null);
     const beatIndexRef = useRef(0);
@@ -77,24 +80,15 @@ export default function MetronomoScreen() {
     const playMetronomeTick = useCallback(async (isStrongBeat) => {
         const soundKey = isStrongBeat ? 'hi' : 'low';
         const player = soundCacheRef.current[soundKey];
-        const vibroDuration = clamp(Math.round(80 - bpm * 0.2), 18, 68);
-        const vibratePattern = isStrongBeat
-            ? [0, vibroDuration, 20, vibroDuration]
-            : [0, Math.max(14, Math.round(vibroDuration * 0.5)), 18, Math.max(14, Math.round(vibroDuration * 0.5))];
+        const vibratePattern = metronomeVibrationPattern(bpm, isStrongBeat);
 
         if (activeMode === 'vibration') {
             Vibration.vibrate(vibratePattern);
             return;
         }
 
-        if (!player) {
-            return;
-        }
-
         try {
-            player.volume = isStrongBeat ? 1 : 0.76;
-            player.seekTo(0);
-            player.play();
+            await replayMetronomePlayer(player, isStrongBeat ? 1 : 0.76);
         } catch (error) {
             console.log('Erro ao tocar som do metrônomo:', error);
         }
@@ -104,7 +98,25 @@ export default function MetronomoScreen() {
         let cancelled = false;
 
         const loadSelectedSoundPack = async () => {
+            setSoundReady(false);
+            setSoundError(false);
+            try {
+                await setAudioModeAsync({
+                    playsInSilentMode: true,
+                    allowsRecording: false,
+                    shouldPlayInBackground: false,
+                    interruptionMode: 'mixWithOthers',
+                });
+            } catch (error) {
+                console.log('Erro ao configurar modo de áudio do metrônomo:', error);
+            }
+
             const nextSounds = await prepareSoundPack(CLICK_PACK_NAME);
+
+            const startedAt = Date.now();
+            while (!cancelled && Object.values(nextSounds).some((player) => !player.isLoaded) && Date.now() - startedAt < 3000) {
+                await new Promise((resolve) => setTimeout(resolve, 25));
+            }
 
             if (cancelled) {
                 Object.values(nextSounds).forEach((player) => {
@@ -126,6 +138,10 @@ export default function MetronomoScreen() {
             });
 
             soundCacheRef.current = nextSounds;
+            const ready = Object.keys(nextSounds).length === Object.keys(SOUND_PATHS[CLICK_PACK_NAME]).length
+                && Object.values(nextSounds).every((player) => player.isLoaded);
+            setSoundReady(ready);
+            setSoundError(!ready);
         };
 
         loadSelectedSoundPack();
@@ -193,29 +209,6 @@ export default function MetronomoScreen() {
     }, [bpm, beatsPerBar]);
 
     useEffect(() => {
-        let cancelled = false;
-
-        const configureAudio = async () => {
-            try {
-                await setAudioModeAsync({
-                    playsInSilentMode: true,
-                    interruptionMode: 'mixWithOthers',
-                });
-            } catch (error) {
-                if (!cancelled) {
-                    console.log('Erro ao configurar modo de áudio do metrônomo:', error);
-                }
-            }
-        };
-
-        configureAudio();
-
-        return () => {
-            cancelled = true;
-        };
-    }, []);
-
-    useEffect(() => {
         return () => {
             if (timeoutRef.current) {
                 clearTimeout(timeoutRef.current);
@@ -240,7 +233,7 @@ export default function MetronomoScreen() {
 
         const intervalMs = 60000 / bpm;
         const schedulerToleranceMs = 3;
-        nextBeatAtRef.current = nowMs() + intervalMs;
+        nextBeatAtRef.current = nowMs();
         lastBeatTimestampRef.current = nextBeatAtRef.current;
 
         const tickLoop = () => {
@@ -318,6 +311,8 @@ export default function MetronomoScreen() {
             return;
         }
 
+        if (activeMode === 'click' && !soundReady) return;
+
         beatIndexRef.current = 0;
         setCurrentBeatNumber(1);
         setActiveBeat(0);
@@ -340,19 +335,22 @@ export default function MetronomoScreen() {
     return (
         <SafeAreaView style={styles.screen} edges={['top', 'bottom', 'left', 'right']}>
         <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
-            <View style={styles.topRow}>
-                <View>
-                    <Text style={styles.eyebrow}>PRÁTICA GUIADA</Text>
-                    <Text style={styles.title}>Metrônomo</Text>
-                </View>
-
-                <TouchableOpacity
+            <ScreenHeader
+                navigation={navigation}
+                title="Metrônomo"
+                right={<TouchableOpacity
+                    accessibilityRole="button"
+                    accessibilityLabel="Configurações do metrônomo"
                     style={styles.configButton}
                     onPress={() => setIsConfigVisible(true)}
                     activeOpacity={0.8}
                 >
                     <Text style={styles.configIcon}>⚙</Text>
-                </TouchableOpacity>
+                </TouchableOpacity>}
+            />
+            <View style={styles.toolIntro}>
+                <Text style={styles.eyebrow}>PRÁTICA GUIADA</Text>
+                <Text style={styles.title}>Encontre seu pulso</Text>
             </View>
 
             <Modal
@@ -435,8 +433,12 @@ export default function MetronomoScreen() {
                         <Text style={styles.adjustText}>−</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={styles.playButton} onPress={handlePlayPause}>
-                        <Text style={styles.playText}>{isPlaying ? 'Pausar' : 'Iniciar'}</Text>
+                    <TouchableOpacity
+                        disabled={!isPlaying && activeMode === 'click' && !soundReady}
+                        style={[styles.playButton, !isPlaying && activeMode === 'click' && !soundReady && styles.playButtonDisabled]}
+                        onPress={handlePlayPause}
+                    >
+                        <Text style={styles.playText}>{isPlaying ? 'Pausar' : activeMode === 'click' && !soundReady ? 'Preparando…' : 'Iniciar'}</Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity style={styles.adjustButton} onPress={() => updateBpm(bpm + 1)}>
@@ -479,6 +481,7 @@ export default function MetronomoScreen() {
                 <Text style={styles.latencyTitle}>AVISO DESTA VERSÃO</Text>
                 <Text style={styles.latencyText}>Por ser uma versão de demonstração feita com Expo, alguns aparelhos podem apresentar um pequeno atraso no clique do metrônomo.</Text>
             </View>
+            {soundError && <Text style={styles.soundError}>Não foi possível preparar o som. Feche e abra o metrônomo para tentar novamente.</Text>}
         </ScrollView>
         </SafeAreaView>
     );
@@ -487,19 +490,20 @@ export default function MetronomoScreen() {
 const styles = StyleSheet.create({
     screen: { flex: 1, backgroundColor: '#F7F9F4' },
     container: { flexGrow: 1, padding: 24, paddingBottom: 30 },
-    topRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginTop: 24, marginBottom: 30 },
+    toolIntro: { marginBottom: 26 },
     eyebrow: { color: '#8A6B56', fontSize: 11, fontWeight: 'bold', letterSpacing: 1.4 },
     title: { color: '#46240C', fontSize: 32, fontWeight: 'bold', marginTop: 8 },
     configButton: {
-        width: 48,
-        height: 48,
-        borderRadius: 16,
+        width: 42,
+        height: 42,
+        borderRadius: 14,
         backgroundColor: '#E9EFE4',
         borderWidth: 1,
         borderColor: '#C2D5B6',
         alignItems: 'center',
         justifyContent: 'center',
     },
+    playButtonDisabled: { opacity: 0.55 },
     configIcon: { color: '#46240C', fontSize: 22, fontWeight: 'bold' },
     modalOverlay: {
         flex: 1,
@@ -681,5 +685,6 @@ const styles = StyleSheet.create({
     tip: { textAlign: 'center', color: '#8A6B56', marginTop: 20, fontSize: 14 },
     latencyNotice: { marginTop: 16, padding: 13, borderRadius: 12, backgroundColor: '#E9EFE4', borderWidth: 1, borderColor: '#C2D5B6' },
     latencyTitle: { color: '#46240C', fontSize: 9, fontWeight: '800', letterSpacing: 1 },
-    latencyText: { color: '#8A6B56', fontSize: 11, lineHeight: 16, marginTop: 5 }
+    latencyText: { color: '#8A6B56', fontSize: 11, lineHeight: 16, marginTop: 5 },
+    soundError: { color: '#9A3E32', fontSize: 11, lineHeight: 16, marginTop: 10, textAlign: 'center' }
 });

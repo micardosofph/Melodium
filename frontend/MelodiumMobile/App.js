@@ -5,10 +5,10 @@ import { StatusBar } from 'expo-status-bar';
 import { LocalDataLifecycle } from './src/services/localData';
 import ProgressScreen from './src/screens/ProgressScreen';
 
-import HomeScreen from './src/screens/HomeScreen';
+import MainTabsScreen from './src/screens/MainTabsScreen';
 import MetronomeScreen from './src/screens/MetronomeScreen';
 import TunerScreen from './src/screens/TunerScreen';
-import { DiaryEntryScreen, SocialScreen, UserScreen } from './src/screens/CommunityScreens';
+import { DiaryEntryScreen, UserScreen } from './src/screens/CommunityScreens';
 import { EvolutionGalleryScreen, EvolutionPlayerScreen } from './src/screens/EvolutionScreens';
 import {
   AddPracticeScreen,
@@ -28,6 +28,7 @@ import {
   WelcomeScreen,
 } from './src/screens/OnboardingScreens';
 import { SupportScreen } from './src/screens/SupportScreens';
+import UpdateNotice from './src/components/UpdateNotice';
 
 const Stack = createNativeStackNavigator();
 
@@ -43,8 +44,7 @@ export default function App() {
         <Stack.Screen name="Welcome" component={WelcomeScreen} options={{ headerShown: false }} />
         <Stack.Screen name="Name" component={NameScreen} options={{ headerShown: false }} />
         <Stack.Screen name="Reminder" component={ReminderScreen} options={{ headerShown: false }} />
-        <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: false, animation: 'slide_from_right', animationTypeForReplace: 'push' }} />
-        <Stack.Screen name="Social" component={SocialScreen} options={{ headerShown: false, animation: 'slide_from_right', animationTypeForReplace: 'push' }} />
+        <Stack.Screen name="Home" component={MainTabsScreen} options={{ headerShown: false, animation: 'slide_from_right', animationTypeForReplace: 'push' }} />
         <Stack.Screen name="DiaryEntry" component={DiaryEntryScreen} options={{ headerShown: false }} />
         <Stack.Screen name="User" component={UserScreen} options={{ headerShown: false }} />
         <Stack.Screen name="Practice" component={PracticeScreen} options={{ headerShown: false }} />
@@ -61,6 +61,7 @@ export default function App() {
         <Stack.Screen name="Metronome" component={MetronomeScreen} options={{ headerShown: false }} />
       </Stack.Navigator>
       </NavigationContainer>
+      <UpdateNotice />
     </SafeAreaProvider>
   );
 }

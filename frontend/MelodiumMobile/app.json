@@ -2,7 +2,8 @@
   "expo": {
     "name": "Melodium",
     "slug": "MelodiumMobile",
-    "version": "1.1.0",
+    "owner": "melodium-team",
+    "version": "1.2.1",
     "orientation": "portrait",
     "backgroundColor": "#F7F9F4",
     "icon": "./assets/icon.png",
@@ -14,9 +15,11 @@
       }
     },
     "android": {
+      "versionCode": 2,
       "backgroundColor": "#F7F9F4",
+      "icon": "./assets/android-icon.png",
       "adaptiveIcon": {
-        "backgroundColor": "#C2D5B6",
+        "backgroundColor": "#C2E0BC",
         "foregroundImage": "./assets/android-icon-foreground.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
@@ -46,12 +49,14 @@
       [
         "expo-image-picker",
         {
-          "photosPermission": "Permita que o Melodium acesse suas fotos para escolher uma imagem de perfil."
+          "photosPermission": "Permita que o Melodium acesse suas fotos para adicionar imagens ao perfil e ao diário.",
+          "cameraPermission": "Permita que o Melodium use a câmera para tirar fotos do perfil e do diário."
         }
       ],
       [
         "expo-notifications",
         {
+          "icon": "./assets/notification-icon.png",
           "color": "#C2D5B6",
           "defaultChannel": "daily-practice"
         }
